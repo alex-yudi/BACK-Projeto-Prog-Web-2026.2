@@ -1,4 +1,4 @@
-package com.br.back.bairro;
+package br.edu.ufersa.bairro;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
