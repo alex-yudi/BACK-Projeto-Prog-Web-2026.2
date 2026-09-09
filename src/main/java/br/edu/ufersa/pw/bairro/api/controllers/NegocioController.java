@@ -1,8 +1,15 @@
 package br.edu.ufersa.pw.bairro.api.controllers;
 
+import br.edu.ufersa.pw.bairro.api.dtos.negocio.NegocioCreate;
+import br.edu.ufersa.pw.bairro.api.dtos.negocio.NegocioResponse;
+import br.edu.ufersa.pw.bairro.api.dtos.negocio.NegocioUpdate;
+import br.edu.ufersa.pw.bairro.api.dtos.negocio.ReivindicacaoRequest;
+import br.edu.ufersa.pw.bairro.api.dtos.negocio.ReivindicacaoResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/negocios")
@@ -10,13 +17,13 @@ public class NegocioController {
 
     // POST /negocios - cadastra um novo negocio (dono = usuario autenticado)
     @PostMapping
-    public ResponseEntity<Object> cadastrar(@RequestBody Object request, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<NegocioResponse> cadastrar(@RequestBody NegocioCreate request, UriComponentsBuilder uriBuilder) {
         return null;
     }
 
     // GET /negocios - busca/listagem, cobre o Feed e a tela de Busca
     @GetMapping
-    public ResponseEntity<Object> listar(
+    public ResponseEntity<List<NegocioResponse>> listar(
             @RequestParam(required = false) String bairro,
             @RequestParam(required = false) String categoria,
             @RequestParam(required = false) String q,
@@ -28,13 +35,13 @@ public class NegocioController {
 
     // GET /negocios/{id} - perfil do negocio (dono nulo = nao reivindicado)
     @GetMapping("/{id}")
-    public ResponseEntity<Object> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<NegocioResponse> buscarPorId(@PathVariable Long id) {
         return null;
     }
 
     // PUT /negocios/{id} - edita os dados cadastrais (somente o dono)
     @PutMapping("/{id}")
-    public ResponseEntity<Object> atualizar(@PathVariable Long id, @RequestBody Object request) {
+    public ResponseEntity<NegocioResponse> atualizar(@PathVariable Long id, @RequestBody NegocioUpdate request) {
         return null;
     }
 
@@ -46,7 +53,7 @@ public class NegocioController {
 
     // POST /negocios/{id}/reivindicacoes - reivindica um perfil nao reivindicado
     @PostMapping("/{id}/reivindicacoes")
-    public ResponseEntity<Object> reivindicar(@PathVariable Long id, @RequestBody Object request) {
+    public ResponseEntity<ReivindicacaoResponse> reivindicar(@PathVariable Long id, @RequestBody ReivindicacaoRequest request) {
         return null;
     }
 }
