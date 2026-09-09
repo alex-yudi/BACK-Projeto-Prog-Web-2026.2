@@ -1,16 +1,17 @@
-package br.edu.ufersa.pw.bairro.api.dtos;
+package br.edu.ufersa.pw.bairro.api.dtos.usuario;
 
-public record UsuarioRegistroRequest(String nome, String email, String senha, String cep, String numero) {
+// Nunca inclui a senha - é o que substitui devolver a entidade Usuario direto.
+public record UsuarioResponse(Long id, String nome, String email, String cep, String numero) {
 
-    public UsuarioRegistroRequest {
+    public UsuarioResponse {
+        if (id == null) {
+            throw new IllegalArgumentException("O id é obrigatório!");
+        }
         if (nome == null || nome.isBlank()) {
             throw new IllegalArgumentException("O nome é obrigatório!");
         }
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("O email é obrigatório!");
-        }
-        if (senha == null || senha.isBlank()) {
-            throw new IllegalArgumentException("A senha é obrigatória!");
         }
         if (cep == null || cep.isBlank()) {
             throw new IllegalArgumentException("O CEP é obrigatório!");

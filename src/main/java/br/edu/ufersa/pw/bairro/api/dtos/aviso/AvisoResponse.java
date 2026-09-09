@@ -1,5 +1,7 @@
-package br.edu.ufersa.pw.bairro.api.dtos;
+package br.edu.ufersa.pw.bairro.api.dtos.aviso;
 
+// DTO provisório, só para destravar o retorno de UsuarioController.listarMeusAvisos.
+// Campos serão revistos quando o AvisoController for criado.
 public record AvisoResponse(Long id, Long negocioId, String categoria, String texto) {
 
     public AvisoResponse {

@@ -1,7 +1,7 @@
 package br.edu.ufersa.pw.bairro.api.controllers;
 
-import br.edu.ufersa.pw.bairro.api.dtos.LoginRequest;
-import br.edu.ufersa.pw.bairro.api.dtos.TokenResponse;
+import br.edu.ufersa.pw.bairro.api.dtos.auth.LoginRequest;
+import br.edu.ufersa.pw.bairro.api.dtos.auth.TokenResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,12 +1,11 @@
-package br.edu.ufersa.pw.bairro.api.dtos;
+package br.edu.ufersa.pw.bairro.api.dtos.usuario;
 
-// Nunca inclui a senha - é o que substitui devolver a entidade Usuario direto.
-public record UsuarioResponse(Long id, String nome, String email, String cep, String numero) {
+// PUT exige todos os campos DESTE recurso (padrão da disciplina) - mas senha não é
+// um deles. Trocar senha é uma ação à parte (normalmente exige confirmar a senha
+// atual), não um campo comum de perfil que se reenvia a cada edição.
+public record UsuarioAtualizacaoRequest(String nome, String email, String cep, String numero) {
 
-    public UsuarioResponse {
-        if (id == null) {
-            throw new IllegalArgumentException("O id é obrigatório!");
-        }
+    public UsuarioAtualizacaoRequest {
         if (nome == null || nome.isBlank()) {
             throw new IllegalArgumentException("O nome é obrigatório!");
         }

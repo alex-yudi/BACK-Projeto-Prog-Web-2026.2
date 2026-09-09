@@ -1,9 +1,9 @@
 package br.edu.ufersa.pw.bairro.api.controllers;
 
-import br.edu.ufersa.pw.bairro.api.dtos.AvisoResponse;
-import br.edu.ufersa.pw.bairro.api.dtos.UsuarioAtualizacaoRequest;
-import br.edu.ufersa.pw.bairro.api.dtos.UsuarioRegistroRequest;
-import br.edu.ufersa.pw.bairro.api.dtos.UsuarioResponse;
+import br.edu.ufersa.pw.bairro.api.dtos.aviso.AvisoResponse;
+import br.edu.ufersa.pw.bairro.api.dtos.usuario.UsuarioAtualizacaoRequest;
+import br.edu.ufersa.pw.bairro.api.dtos.usuario.UsuarioRegistroRequest;
+import br.edu.ufersa.pw.bairro.api.dtos.usuario.UsuarioResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;

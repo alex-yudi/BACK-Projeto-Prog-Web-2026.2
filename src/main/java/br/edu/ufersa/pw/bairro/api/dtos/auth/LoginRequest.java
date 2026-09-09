@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.dtos;
+package br.edu.ufersa.pw.bairro.api.dtos.auth;
 
 public record LoginRequest(String email, String senha) {
 
