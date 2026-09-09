@@ -1,4 +1,4 @@
-package br.edu.ufersa.bairro;
+package br.edu.ufersa.pw.bairro;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

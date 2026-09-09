@@ -1,4 +1,4 @@
-package br.edu.ufersa.bairro.api.controllers;
+package br.edu.ufersa.pw.bairro.api.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
