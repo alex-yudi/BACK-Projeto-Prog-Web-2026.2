@@ -8,7 +8,7 @@ public record AvisoResponse(
         Long id,
         Long negocioId,
         Long autorId,
-        String categoria,
+        CategoriaAviso categoria,
         String texto,
         LocalDateTime criadoEm,
         long votosUtil,
@@ -25,7 +25,7 @@ public record AvisoResponse(
         if (autorId == null) {
             throw new IllegalArgumentException("O autorId é obrigatório!");
         }
-        if (categoria == null || categoria.isBlank()) {
+        if (categoria == null) {
             throw new IllegalArgumentException("A categoria é obrigatória!");
         }
         if (texto == null || texto.isBlank()) {
