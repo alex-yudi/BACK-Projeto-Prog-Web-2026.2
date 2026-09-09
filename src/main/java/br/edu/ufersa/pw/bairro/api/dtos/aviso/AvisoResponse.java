@@ -1,8 +1,19 @@
 package br.edu.ufersa.pw.bairro.api.dtos.aviso;
 
-// DTO provisório, só para destravar o retorno de UsuarioController.listarMeusAvisos.
-// Campos serão revistos quando o AvisoController for criado.
-public record AvisoResponse(Long id, Long negocioId, String categoria, String texto) {
+import java.time.LocalDateTime;
+
+// votosUtil/votosNaoUtil sao a contagem agregada das Avaliacoes desse aviso - nao existe
+// coluna propria pra isso, e o Response que resume o que o front precisa exibir.
+public record AvisoResponse(
+        Long id,
+        Long negocioId,
+        Long autorId,
+        String categoria,
+        String texto,
+        LocalDateTime criadoEm,
+        long votosUtil,
+        long votosNaoUtil
+) {
 
     public AvisoResponse {
         if (id == null) {
@@ -11,11 +22,17 @@ public record AvisoResponse(Long id, Long negocioId, String categoria, String te
         if (negocioId == null) {
             throw new IllegalArgumentException("O negocioId é obrigatório!");
         }
+        if (autorId == null) {
+            throw new IllegalArgumentException("O autorId é obrigatório!");
+        }
         if (categoria == null || categoria.isBlank()) {
             throw new IllegalArgumentException("A categoria é obrigatória!");
         }
         if (texto == null || texto.isBlank()) {
             throw new IllegalArgumentException("O texto é obrigatório!");
+        }
+        if (criadoEm == null) {
+            throw new IllegalArgumentException("A data de criação é obrigatória!");
         }
     }
 }
