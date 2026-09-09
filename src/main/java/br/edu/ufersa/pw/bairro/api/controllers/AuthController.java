@@ -1,7 +1,6 @@
 package br.edu.ufersa.pw.bairro.api.controllers;
 
 import br.edu.ufersa.pw.bairro.api.dto.LoginRequest;
-import br.edu.ufersa.pw.bairro.api.models.Usuario;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
