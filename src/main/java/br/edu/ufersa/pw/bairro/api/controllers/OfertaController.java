@@ -1,39 +1,54 @@
 package br.edu.ufersa.pw.bairro.api.controllers;
 
+import br.edu.ufersa.pw.bairro.api.dtos.oferta.OfertaCreate;
+import br.edu.ufersa.pw.bairro.api.dtos.oferta.OfertaResponse;
+import br.edu.ufersa.pw.bairro.api.dtos.oferta.OfertaUpdate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/negocios/{negocioId}/ofertas")
 public class OfertaController {
 
-    // POST /negocios/{negocioId}/ofertas - cria uma oferta (promocao com validade, ou item de catalogo sem validade)
+    // POST /negocios/{negocioId}/ofertas - cria uma oferta
     @PostMapping
-    public ResponseEntity<Object> criar(@PathVariable Long negocioId, @RequestBody Object request) {
+    public ResponseEntity<OfertaResponse> criar(
+            @PathVariable Long negocioId,
+            @RequestBody OfertaCreate request) {
         return null;
     }
 
-    // GET /negocios/{negocioId}/ofertas - lista as ofertas do negocio (promocoes ativas + catalogo)
+    // GET /negocios/{negocioId}/ofertas - lista as ofertas do negocio
     @GetMapping
-    public ResponseEntity<Object> listar(@PathVariable Long negocioId) {
+    public ResponseEntity<List<OfertaResponse>> listar(
+            @PathVariable Long negocioId) {
         return null;
     }
 
-    // GET /negocios/{negocioId}/ofertas/{ofertaId}
+    // GET /negocios/{negocioId}/ofertas/{ofertaId} - busca uma oferta
     @GetMapping("/{ofertaId}")
-    public ResponseEntity<Object> buscarPorId(@PathVariable Long negocioId, @PathVariable Long ofertaId) {
+    public ResponseEntity<OfertaResponse> buscarPorId(
+            @PathVariable Long negocioId,
+            @PathVariable Long ofertaId) {
         return null;
     }
 
-    // PUT /negocios/{negocioId}/ofertas/{ofertaId} - edita a oferta (somente o dono do negocio)
+    // PUT /negocios/{negocioId}/ofertas/{ofertaId} - edita a oferta
     @PutMapping("/{ofertaId}")
-    public ResponseEntity<Object> atualizar(@PathVariable Long negocioId, @PathVariable Long ofertaId, @RequestBody Object request) {
+    public ResponseEntity<OfertaResponse> atualizar(
+            @PathVariable Long negocioId,
+            @PathVariable Long ofertaId,
+            @RequestBody OfertaUpdate request) {
         return null;
     }
 
-    // DELETE /negocios/{negocioId}/ofertas/{ofertaId} - encerra/exclui a oferta (somente o dono do negocio)
+    // DELETE /negocios/{negocioId}/ofertas/{ofertaId} - exclui a oferta
     @DeleteMapping("/{ofertaId}")
-    public ResponseEntity<Void> encerrar(@PathVariable Long negocioId, @PathVariable Long ofertaId) {
+    public ResponseEntity<Void> excluir(
+            @PathVariable Long negocioId,
+            @PathVariable Long ofertaId) {
         return null;
     }
 }
