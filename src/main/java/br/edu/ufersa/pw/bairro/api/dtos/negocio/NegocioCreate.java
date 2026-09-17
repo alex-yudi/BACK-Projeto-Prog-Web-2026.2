@@ -1,7 +1,7 @@
 package br.edu.ufersa.pw.bairro.api.dtos.negocio;
 
 // dono vem do usuario autenticado - nao e campo deste DTO.
-public record NegocioCreate(String nome, CategoriaNegocio categoria, String cep, String numero, String descricao) {
+public record NegocioCreate(String nome, CategoriaNegocio categoria, String cep, String numero, String bairro, String descricao) {
 
     public NegocioCreate {
         if (nome == null || nome.isBlank()) {
@@ -15,6 +15,9 @@ public record NegocioCreate(String nome, CategoriaNegocio categoria, String cep,
         }
         if (numero == null || numero.isBlank()) {
             throw new IllegalArgumentException("O número é obrigatório!");
+        }
+        if (bairro == null || bairro.isBlank()) {
+            throw new IllegalArgumentException("O bairro é obrigatório!");
         }
         if (descricao == null || descricao.isBlank()) {
             throw new IllegalArgumentException("A descrição é obrigatória!");
