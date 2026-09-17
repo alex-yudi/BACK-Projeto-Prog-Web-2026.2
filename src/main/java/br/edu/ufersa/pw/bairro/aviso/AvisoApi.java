@@ -1,6 +1,6 @@
-package br.edu.ufersa.pw.bairro.api.feature.aviso;
+package br.edu.ufersa.pw.bairro.aviso;
 
-import br.edu.ufersa.pw.bairro.api.feature.aviso.dto.AvisoResponse;
+import br.edu.ufersa.pw.bairro.aviso.dto.AvisoResponse;
 
 import java.util.List;
 

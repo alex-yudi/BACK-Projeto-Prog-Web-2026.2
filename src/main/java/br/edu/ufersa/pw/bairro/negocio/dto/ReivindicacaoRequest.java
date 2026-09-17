@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.negocio.dto;
+package br.edu.ufersa.pw.bairro.negocio.dto;
 
 // justificativa é opcional, mas se vier, não pode ser vazia
 // Os ids do negócio e do usuário são obtidos pelo próprio contexto da requisição

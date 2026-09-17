@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.negocio.dto;
+package br.edu.ufersa.pw.bairro.negocio.dto;
 
 // PUT exige todos os campos deste recurso. So o dono do negocio pode chamar esse
 // endpoint (checagem acontece no controller/service, nao aqui).

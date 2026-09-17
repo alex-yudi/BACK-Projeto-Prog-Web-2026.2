@@ -1,6 +1,6 @@
-package br.edu.ufersa.pw.bairro.api.feature.negocio;
+package br.edu.ufersa.pw.bairro.negocio;
 
-import br.edu.ufersa.pw.bairro.api.feature.negocio.dto.NegocioResponse;
+import br.edu.ufersa.pw.bairro.negocio.dto.NegocioResponse;
 
 public interface NegocioApi {
 

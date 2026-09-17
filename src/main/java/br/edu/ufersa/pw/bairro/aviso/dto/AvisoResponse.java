@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.aviso.dto;
+package br.edu.ufersa.pw.bairro.aviso.dto;
 
 import br.edu.ufersa.pw.bairro.api.dtos.aviso.CategoriaAviso;
 

@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.negocio.dto;
+package br.edu.ufersa.pw.bairro.negocio.dto;
 
 // dono vem do usuario autenticado - nao e campo deste DTO.
 public record NegocioCreate(String nome, CategoriaNegocio categoria, String cep, String numero, String bairro, String descricao) {

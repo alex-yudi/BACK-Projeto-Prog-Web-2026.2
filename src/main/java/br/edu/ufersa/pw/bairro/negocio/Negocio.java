@@ -1,6 +1,6 @@
-package br.edu.ufersa.pw.bairro.api.feature.negocio;
+package br.edu.ufersa.pw.bairro.negocio;
 
-import br.edu.ufersa.pw.bairro.api.feature.usuario.Usuario;
+import br.edu.ufersa.pw.bairro.usuario.Usuario;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

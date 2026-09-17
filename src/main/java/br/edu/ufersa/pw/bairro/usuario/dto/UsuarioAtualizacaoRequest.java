@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.usuario.dto;
+package br.edu.ufersa.pw.bairro.usuario.dto;
 
 // PUT exige todos os campos DESTE recurso (padrão da disciplina) - mas senha não é
 // um deles. Trocar senha é uma ação à parte (normalmente exige confirmar a senha

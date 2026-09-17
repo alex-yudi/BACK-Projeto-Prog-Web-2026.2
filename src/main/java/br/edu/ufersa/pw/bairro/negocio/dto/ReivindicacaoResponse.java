@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.negocio.dto;
+package br.edu.ufersa.pw.bairro.negocio.dto;
 
 import java.time.LocalDateTime;
 

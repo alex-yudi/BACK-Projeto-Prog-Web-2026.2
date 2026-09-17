@@ -1,10 +1,10 @@
-package br.edu.ufersa.pw.bairro.api.feature.negocio;
+package br.edu.ufersa.pw.bairro.negocio;
 
-import br.edu.ufersa.pw.bairro.api.feature.negocio.dto.NegocioCreate;
-import br.edu.ufersa.pw.bairro.api.feature.negocio.dto.NegocioResponse;
-import br.edu.ufersa.pw.bairro.api.feature.negocio.dto.NegocioUpdate;
-import br.edu.ufersa.pw.bairro.api.feature.negocio.dto.ReivindicacaoRequest;
-import br.edu.ufersa.pw.bairro.api.feature.negocio.dto.ReivindicacaoResponse;
+import br.edu.ufersa.pw.bairro.negocio.dto.NegocioCreate;
+import br.edu.ufersa.pw.bairro.negocio.dto.NegocioResponse;
+import br.edu.ufersa.pw.bairro.negocio.dto.NegocioUpdate;
+import br.edu.ufersa.pw.bairro.negocio.dto.ReivindicacaoRequest;
+import br.edu.ufersa.pw.bairro.negocio.dto.ReivindicacaoResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

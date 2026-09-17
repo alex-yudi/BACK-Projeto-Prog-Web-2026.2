@@ -1,6 +1,6 @@
-package br.edu.ufersa.pw.bairro.api.feature.aviso;
+package br.edu.ufersa.pw.bairro.aviso;
 
-import br.edu.ufersa.pw.bairro.api.feature.aviso.dto.*;
+import br.edu.ufersa.pw.bairro.aviso.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

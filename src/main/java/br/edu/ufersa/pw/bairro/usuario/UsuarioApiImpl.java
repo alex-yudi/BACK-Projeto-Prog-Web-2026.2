@@ -1,6 +1,6 @@
-package br.edu.ufersa.pw.bairro.api.feature.usuario;
+package br.edu.ufersa.pw.bairro.usuario;
 
-import br.edu.ufersa.pw.bairro.api.feature.usuario.dto.UsuarioResponse;
+import br.edu.ufersa.pw.bairro.usuario.dto.UsuarioResponse;
 import org.springframework.stereotype.Service;
 
 // Classe package-private. Implementa o contrato público para outros módulos.

@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.usuario;
+package br.edu.ufersa.pw.bairro.usuario;
 
 import jakarta.persistence.*;
 

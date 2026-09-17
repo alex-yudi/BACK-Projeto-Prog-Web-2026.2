@@ -1,7 +1,7 @@
-package br.edu.ufersa.pw.bairro.api.feature.aviso;
+package br.edu.ufersa.pw.bairro.aviso;
 
-import br.edu.ufersa.pw.bairro.api.feature.aviso.dto.AvisoCreate;
-import br.edu.ufersa.pw.bairro.api.feature.aviso.dto.AvisoResponse;
+import br.edu.ufersa.pw.bairro.aviso.dto.AvisoCreate;
+import br.edu.ufersa.pw.bairro.aviso.dto.AvisoResponse;
 import org.springframework.stereotype.Service;
 
 // Centraliza a lógica de negócios da feature, acessado pelo Controller

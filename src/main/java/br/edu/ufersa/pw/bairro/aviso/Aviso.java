@@ -1,7 +1,7 @@
-package br.edu.ufersa.pw.bairro.api.feature.aviso;
+package br.edu.ufersa.pw.bairro.aviso;
 
-import br.edu.ufersa.pw.bairro.api.feature.usuario.Usuario;
-import br.edu.ufersa.pw.bairro.api.feature.negocio.Negocio;
+import br.edu.ufersa.pw.bairro.usuario.Usuario;
+import br.edu.ufersa.pw.bairro.negocio.Negocio;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

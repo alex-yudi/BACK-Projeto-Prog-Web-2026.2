@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.aviso;
+package br.edu.ufersa.pw.bairro.aviso;
 
 public enum CategoriaAviso {
     PRECO,

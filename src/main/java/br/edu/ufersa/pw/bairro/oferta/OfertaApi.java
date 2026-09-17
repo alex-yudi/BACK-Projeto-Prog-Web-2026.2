@@ -1,6 +1,6 @@
-package br.edu.ufersa.pw.bairro.api.feature.oferta;
+package br.edu.ufersa.pw.bairro.oferta;
 
-import br.edu.ufersa.pw.bairro.api.feature.oferta.dto.OfertaResponse;
+import br.edu.ufersa.pw.bairro.oferta.dto.OfertaResponse;
 
 import java.util.List;
 

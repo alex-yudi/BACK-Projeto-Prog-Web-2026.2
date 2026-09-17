@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.negocio.dto;
+package br.edu.ufersa.pw.bairro.negocio.dto;
 
 // donoId nulo = perfil ainda nao reivindicado (negocio criado a partir de avisos da
 // comunidade, sem dono vinculado)

@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.negocio;
+package br.edu.ufersa.pw.bairro.negocio;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

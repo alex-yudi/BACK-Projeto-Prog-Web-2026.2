@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.usuario.dto;
+package br.edu.ufersa.pw.bairro.usuario.dto;
 
 public record UsuarioRegistroRequest(String nome, String email, String senha, String cep, String numero) {
 

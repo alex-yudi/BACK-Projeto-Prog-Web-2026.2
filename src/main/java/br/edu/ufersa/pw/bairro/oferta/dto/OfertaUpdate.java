@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.oferta.dto;
+package br.edu.ufersa.pw.bairro.oferta.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.api.feature.auth.dto;
+package br.edu.ufersa.pw.bairro.auth.dto;
 
 public record TokenResponse(String token) {
 
