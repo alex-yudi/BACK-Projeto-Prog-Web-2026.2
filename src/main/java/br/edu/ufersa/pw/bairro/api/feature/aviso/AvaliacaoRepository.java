@@ -1,8 +1,5 @@
 package br.edu.ufersa.pw.bairro.api.feature.aviso;
 
-
-
-import br.edu.ufersa.pw.bairro.domain.entities.Avaliacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
