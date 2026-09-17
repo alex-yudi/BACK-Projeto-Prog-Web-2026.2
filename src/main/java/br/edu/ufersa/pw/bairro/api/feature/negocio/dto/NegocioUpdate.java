@@ -2,7 +2,7 @@ package br.edu.ufersa.pw.bairro.api.feature.negocio.dto;
 
 // PUT exige todos os campos deste recurso. So o dono do negocio pode chamar esse
 // endpoint (checagem acontece no controller/service, nao aqui).
-public record NegocioUpdate(String nome, CategoriaNegocio categoria, String cep, String numero, String descricao) {
+public record NegocioUpdate(String nome, CategoriaNegocio categoria, String cep, String numero, String bairro, String descricao) {
 
     public NegocioUpdate {
         if (nome == null || nome.isBlank()) {
@@ -16,6 +16,9 @@ public record NegocioUpdate(String nome, CategoriaNegocio categoria, String cep,
         }
         if (numero == null || numero.isBlank()) {
             throw new IllegalArgumentException("O número é obrigatório!");
+        }
+        if (bairro == null || bairro.isBlank()) {
+            throw new IllegalArgumentException("O bairro é obrigatório!");
         }
         if (descricao == null || descricao.isBlank()) {
             throw new IllegalArgumentException("A descrição é obrigatória!");
