@@ -15,8 +15,13 @@ class UsuarioApiImpl implements UsuarioApi {
 
     @Override
     public UsuarioResponse buscarPorId(Long id) {
-        // Exemplo simplificado para não dar erro (Stub)
         Usuario usuario = repository.findById(id).orElseThrow();
-        return new UsuarioResponse(/* mapear dados do usuario */);
+        return new UsuarioResponse(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                usuario.getCep(),
+                usuario.getNumero()
+        );
     }
 }
