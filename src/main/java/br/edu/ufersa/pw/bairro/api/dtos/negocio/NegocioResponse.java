@@ -8,6 +8,7 @@ public record NegocioResponse(
         CategoriaNegocio categoria,
         String cep,
         String numero,
+        String bairro,
         String descricao,
         Long donoId
 ) {
@@ -27,6 +28,9 @@ public record NegocioResponse(
         }
         if (numero == null || numero.isBlank()) {
             throw new IllegalArgumentException("O número é obrigatório!");
+        }
+        if (bairro == null || bairro.isBlank()) {
+            throw new IllegalArgumentException("O bairro é obrigatório!");
         }
         if (descricao == null || descricao.isBlank()) {
             throw new IllegalArgumentException("A descrição é obrigatória!");
