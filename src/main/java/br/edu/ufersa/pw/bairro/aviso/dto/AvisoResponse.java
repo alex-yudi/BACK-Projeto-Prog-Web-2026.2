@@ -1,7 +1,5 @@
 package br.edu.ufersa.pw.bairro.aviso.dto;
 
-import br.edu.ufersa.pw.bairro.api.dtos.aviso.CategoriaAviso;
-
 import java.time.LocalDateTime;
 
 // votosUtil/votosNaoUtil sao a contagem agregada das Avaliacoes desse aviso - nao existe

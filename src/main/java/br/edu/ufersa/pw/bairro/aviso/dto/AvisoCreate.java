@@ -1,7 +1,5 @@
 package br.edu.ufersa.pw.bairro.aviso.dto;
 
-import br.edu.ufersa.pw.bairro.api.dtos.aviso.CategoriaAviso;
-
 // negocioId vem do path (/negocios/{negocioId}/avisos), autor vem do usuario autenticado -
 // nenhum dos dois é campo deste DTO.
 public record AvisoCreate(CategoriaAviso categoria, String texto) {
