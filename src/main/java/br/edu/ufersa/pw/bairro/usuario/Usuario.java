@@ -1,12 +1,17 @@
 package br.edu.ufersa.pw.bairro.usuario;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "usuarios")
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,15 +32,20 @@ public class Usuario {
     @Column(nullable = false)
     private String numero;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
+
     protected Usuario() {
     }
 
-    public Usuario(String nome, String email, String senha, String cep, String numero) {
+    public Usuario(String nome, String email, String senha, String cep, String numero, UserRole role) {
         this.nome = validarNome(nome);
         this.email = validarEmail(email);
         this.senha = validarSenha(senha);
         this.cep = validarCep(cep);
         this.numero = validarNumero(numero);
+        this.role = role;
     }
 
     // PUT exige todos os campos deste recurso, exceto senha - troca de senha e uma acao a parte.
@@ -85,7 +95,7 @@ public class Usuario {
         return id;
     }
 
-    public String getNome() {
+    public String getUsername() {
         return nome;
     }
 
@@ -93,7 +103,7 @@ public class Usuario {
         return email;
     }
 
-    public String getSenha() {
+    public String getPassword() {
         return senha;
     }
 
@@ -104,6 +114,8 @@ public class Usuario {
     public String getNumero() {
         return numero;
     }
+
+    public UserRole getRole() {return role;}
 
     @Override
     public boolean equals(Object o) {
@@ -116,5 +128,17 @@ public class Usuario {
     @Override
     public int hashCode() {
         return Objects.hash(email);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        if(this.role == UserRole.ADMIN){
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_USER")
+            );
+        }
+
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 }
