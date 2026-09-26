@@ -1,5 +1,6 @@
 package br.edu.ufersa.pw.bairro.shared.security;
 
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -39,6 +40,9 @@ public class SecurityConfig {
                             "/api/v1/negocios/*/ofertas",
                             "/api/v1/negocios/*/ofertas/*",
                             "/api/v1/negocios/*/avisos").permitAll();
+                    // O container redireciona 400/404/405 para /error, e esse despacho passa de novo pelo
+                    // Security sem o filtro JWT. Sem esta linha, todo erro desses vira 403 com corpo vazio.
+                    req.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll();
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
