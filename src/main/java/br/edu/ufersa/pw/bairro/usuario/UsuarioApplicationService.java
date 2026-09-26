@@ -20,7 +20,7 @@ class UsuarioApplicationService {
 
     @Transactional
     UsuarioResponse cadastrar(UsuarioRegistroRequest dto) {
-        if (repository.existsByEmail(dto.email())) {
+        if (repository.existsByEmailIgnoreCase(dto.email())) {
             throw new OperacaoInvalidaException("E-mail já cadastrado no sistema.");
         }
         String senhaCodificada = passwordEncoder.encode(dto.senha());
