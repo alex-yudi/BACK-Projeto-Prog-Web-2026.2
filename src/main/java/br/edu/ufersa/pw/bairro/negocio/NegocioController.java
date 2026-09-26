@@ -3,8 +3,6 @@ package br.edu.ufersa.pw.bairro.negocio;
 import br.edu.ufersa.pw.bairro.negocio.dto.NegocioCreate;
 import br.edu.ufersa.pw.bairro.negocio.dto.NegocioResponse;
 import br.edu.ufersa.pw.bairro.negocio.dto.NegocioUpdate;
-import br.edu.ufersa.pw.bairro.negocio.dto.ReivindicacaoRequest;
-import br.edu.ufersa.pw.bairro.negocio.dto.ReivindicacaoResponse;
 import br.edu.ufersa.pw.bairro.usuario.Usuario;
 
 import org.springframework.http.ResponseEntity;
@@ -61,16 +59,6 @@ public class NegocioController {
     public ResponseEntity<Void> excluir(
             @AuthenticationPrincipal Usuario usuarioAutenticado,
             @PathVariable Long id) {
-        return null;
-    }
-
-    // POST /api/v1/negocios/{id}/reivindicacoes - reivindica um perfil nao reivindicado
-    @PostMapping("/{id}/reivindicacoes")
-    public ResponseEntity<ReivindicacaoResponse> reivindicar(
-            @AuthenticationPrincipal Usuario usuarioAutenticado,
-            @PathVariable Long id,
-            @RequestBody ReivindicacaoRequest request
-    ) {
         return null;
     }
 }
