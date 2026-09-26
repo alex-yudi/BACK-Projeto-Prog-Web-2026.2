@@ -2,5 +2,5 @@
 
 ## Débitos técnicos
 
-- `AvisoApi`, `NegocioApi` e `OfertaApi` são interfaces sem implementação (`XxxApiImpl`) ainda.
+- `AvisoApi` é uma interface sem implementação (`AvisoApiImpl`) ainda.
 - Controllers ainda não estão conectados aos repositories (stubs retornando `null`).
