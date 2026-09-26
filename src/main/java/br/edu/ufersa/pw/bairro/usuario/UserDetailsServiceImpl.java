@@ -1,0 +1,23 @@
+package br.edu.ufersa.pw.bairro.usuario;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+// Package-private: fica junto do UsuarioRepository, que tambem nao e visivel fora do modulo.
+@Service
+class UserDetailsServiceImpl implements UserDetailsService {
+
+    private final UsuarioRepository repository;
+
+    UserDetailsServiceImpl(UsuarioRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return repository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
+    }
+}

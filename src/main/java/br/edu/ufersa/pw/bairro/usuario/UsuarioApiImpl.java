@@ -1,8 +1,6 @@
 package br.edu.ufersa.pw.bairro.usuario;
 
 import br.edu.ufersa.pw.bairro.usuario.dto.UsuarioResponse;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 // Classe package-private. Implementa o contrato público para outros módulos.
@@ -25,10 +23,5 @@ class UsuarioApiImpl implements UsuarioApi {
                 usuario.getCep(),
                 usuario.getNumero()
         );
-    }
-
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
-        return repository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
     }
 }
