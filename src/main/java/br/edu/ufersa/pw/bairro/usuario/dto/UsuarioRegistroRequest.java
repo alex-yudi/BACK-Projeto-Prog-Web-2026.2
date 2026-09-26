@@ -12,6 +12,9 @@ public record UsuarioRegistroRequest(String nome, String email, String senha, St
         if (senha == null || senha.isBlank()) {
             throw new IllegalArgumentException("A senha é obrigatória!");
         }
+        if (senha.length() < 8 || senha.length() > 32) {
+            throw new IllegalArgumentException("A senha deve ter entre 8 e 32 caracteres!");
+        }
         if (cep == null || cep.isBlank()) {
             throw new IllegalArgumentException("O CEP é obrigatório!");
         }

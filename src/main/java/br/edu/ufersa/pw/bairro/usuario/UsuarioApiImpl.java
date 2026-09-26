@@ -20,7 +20,7 @@ class UsuarioApiImpl implements UsuarioApi {
         Usuario usuario = repository.findById(id).orElseThrow();
         return new UsuarioResponse(
                 usuario.getId(),
-                usuario.getUsername(),
+                usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getCep(),
                 usuario.getNumero()

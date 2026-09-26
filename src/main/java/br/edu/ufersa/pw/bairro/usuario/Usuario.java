@@ -1,6 +1,7 @@
 package br.edu.ufersa.pw.bairro.usuario;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +33,8 @@ public class Usuario implements UserDetails {
     @Column(nullable = false)
     private String numero;
 
+    // Default no banco: linhas anteriores ao role viram USER, nunca ADMIN.
+    @ColumnDefault("'USER'")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
@@ -39,13 +42,15 @@ public class Usuario implements UserDetails {
     protected Usuario() {
     }
 
-    public Usuario(String nome, String email, String senha, String cep, String numero, UserRole role) {
+    // Recebe a senha ja codificada (BCrypt); a regra de tamanho da senha em texto puro
+    // vive no UsuarioRegistroRequest. O cadastro sempre cria USER - ADMIN nunca vem do cliente.
+    public Usuario(String nome, String email, String senhaCodificada, String cep, String numero) {
         this.nome = validarNome(nome);
         this.email = validarEmail(email);
-        this.senha = validarSenha(senha);
+        this.senha = validarSenhaCodificada(senhaCodificada);
         this.cep = validarCep(cep);
         this.numero = validarNumero(numero);
-        this.role = role;
+        this.role = UserRole.USER;
     }
 
     // PUT exige todos os campos deste recurso, exceto senha - troca de senha e uma acao a parte.
@@ -70,11 +75,11 @@ public class Usuario implements UserDetails {
         return email;
     }
 
-    private String validarSenha(String senha) {
-        if (senha == null || senha.length() < 8 || senha.length() > 32) {
-            throw new IllegalArgumentException("A senha deve ter entre 8 e 32 caracteres!");
+    private String validarSenhaCodificada(String senhaCodificada) {
+        if (senhaCodificada == null || senhaCodificada.isBlank()) {
+            throw new IllegalArgumentException("A senha é obrigatória!");
         }
-        return senha;
+        return senhaCodificada;
     }
 
     private String validarCep(String cep) {
@@ -95,8 +100,14 @@ public class Usuario implements UserDetails {
         return id;
     }
 
-    public String getUsername() {
+    public String getNome() {
         return nome;
+    }
+
+    // UserDetails: o "username" de login e o e-mail (e o subject do JWT).
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     public String getEmail() {
