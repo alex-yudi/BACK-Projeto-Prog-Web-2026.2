@@ -14,6 +14,9 @@ public record NegocioUpdate(String nome, CategoriaNegocio categoria, String cep,
         if (cep == null || cep.isBlank()) {
             throw new IllegalArgumentException("O CEP é obrigatório!");
         }
+        if (!cep.matches("\\d{8}")) {
+            throw new IllegalArgumentException("O CEP deve conter exatamente 8 dígitos!");
+        }
         if (numero == null || numero.isBlank()) {
             throw new IllegalArgumentException("O número é obrigatório!");
         }

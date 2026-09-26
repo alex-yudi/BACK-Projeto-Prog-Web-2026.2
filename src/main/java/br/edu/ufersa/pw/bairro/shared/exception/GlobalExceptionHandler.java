@@ -21,6 +21,7 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
     private static final String SQLSTATE_UNICIDADE = "23505";
+    private static final String SQLSTATE_TAMANHO = "22001";
 
     // Violacao de regra de negocio/duplicidade (HTTP 422 Unprocessable Entity)
     @ExceptionHandler(OperacaoInvalidaException.class)
@@ -63,8 +64,13 @@ public class GlobalExceptionHandler {
     // qualquer outra e erro nosso: fica no log e o cliente recebe 500 sem detalhes internos.
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail tratarIntegridade(DataIntegrityViolationException ex) {
-        if (ex.getMostSpecificCause() instanceof SQLException sql && SQLSTATE_UNICIDADE.equals(sql.getSQLState())) {
-            return problema(HttpStatus.CONFLICT, "Conflito", "Já existe um registro com esses dados.");
+        if (ex.getMostSpecificCause() instanceof SQLException sql) {
+            if (SQLSTATE_UNICIDADE.equals(sql.getSQLState())) {
+                return problema(HttpStatus.CONFLICT, "Conflito", "Já existe um registro com esses dados.");
+            }
+            if (SQLSTATE_TAMANHO.equals(sql.getSQLState())) {
+                return problema(HttpStatus.BAD_REQUEST, "Corpo da requisição inválido", "Um dos campos excede o tamanho permitido.");
+            }
         }
         log.error("Violacao de integridade nao esperada", ex);
         return problema(HttpStatus.INTERNAL_SERVER_ERROR, "Erro interno", "Não foi possível concluir a operação.");
