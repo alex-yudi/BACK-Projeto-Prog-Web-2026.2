@@ -69,7 +69,7 @@ public class Negocio {
         this.descricao = validarDescricao(descricao);
     }
 
-    // POST /negocios/{id}/reivindicacoes - so pode reivindicar quem ainda nao tem dono.
+    // POST /api/v1/negocios/{id}/reivindicacoes - so pode reivindicar quem ainda nao tem dono.
     public void reivindicar(Usuario usuario) {
         if (usuario == null) {
             throw new IllegalArgumentException("O usuário que está reivindicando é obrigatório!");

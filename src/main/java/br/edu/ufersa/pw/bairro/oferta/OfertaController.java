@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/negocios/{negocioId}/ofertas")
+@RequestMapping("/api/v1/negocios/{negocioId}/ofertas")
 public class OfertaController {
 
-    // POST /negocios/{negocioId}/ofertas - cria uma oferta
+    // POST /api/v1/negocios/{negocioId}/ofertas - cria uma oferta
     @PostMapping
     public ResponseEntity<OfertaResponse> criar(
             @PathVariable Long negocioId,
@@ -20,14 +20,14 @@ public class OfertaController {
         return null;
     }
 
-    // GET /negocios/{negocioId}/ofertas - lista as ofertas do negocio
+    // GET /api/v1/negocios/{negocioId}/ofertas - lista as ofertas do negocio
     @GetMapping
     public ResponseEntity<List<OfertaResponse>> listar(
             @PathVariable Long negocioId) {
         return null;
     }
 
-    // GET /negocios/{negocioId}/ofertas/{ofertaId} - busca uma oferta
+    // GET /api/v1/negocios/{negocioId}/ofertas/{ofertaId} - busca uma oferta
     @GetMapping("/{ofertaId}")
     public ResponseEntity<OfertaResponse> buscarPorId(
             @PathVariable Long negocioId,
@@ -35,7 +35,7 @@ public class OfertaController {
         return null;
     }
 
-    // PUT /negocios/{negocioId}/ofertas/{ofertaId} - edita a oferta
+    // PUT /api/v1/negocios/{negocioId}/ofertas/{ofertaId} - edita a oferta
     @PutMapping("/{ofertaId}")
     public ResponseEntity<OfertaResponse> atualizar(
             @PathVariable Long negocioId,
@@ -44,7 +44,7 @@ public class OfertaController {
         return null;
     }
 
-    // DELETE /negocios/{negocioId}/ofertas/{ofertaId} - exclui a oferta
+    // DELETE /api/v1/negocios/{negocioId}/ofertas/{ofertaId} - exclui a oferta
     @DeleteMapping("/{ofertaId}")
     public ResponseEntity<Void> excluir(
             @PathVariable Long negocioId,

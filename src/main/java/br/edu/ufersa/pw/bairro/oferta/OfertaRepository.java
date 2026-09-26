@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface OfertaRepository extends JpaRepository<Oferta, Long> {
 
-    // GET /negocios/{negocioId}/ofertas
+    // GET /api/v1/negocios/{negocioId}/ofertas
     List<Oferta> findByNegocioId(Long negocioId);
 
     // GET/PUT/DELETE /negocios/{negocioId}/ofertas/{ofertaId} - garante que a oferta

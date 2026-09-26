@@ -13,10 +13,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/negocios")
+@RequestMapping("/api/v1/negocios")
 public class NegocioController {
 
-    // POST /negocios - cadastra um novo negocio (dono = usuario autenticado)
+    // POST /api/v1/negocios - cadastra um novo negocio (dono = usuario autenticado)
     @PostMapping
     public ResponseEntity<NegocioResponse> cadastrar(
             @RequestBody NegocioCreate request,
@@ -25,7 +25,7 @@ public class NegocioController {
         return null;
     }
 
-    // GET /negocios - busca/listagem, cobre o Feed e a tela de Busca
+    // GET /api/v1/negocios - busca/listagem, cobre o Feed e a tela de Busca
     @GetMapping
     public ResponseEntity<List<NegocioResponse>> listar(
             @RequestParam(required = false) String bairro,
@@ -37,13 +37,13 @@ public class NegocioController {
         return null;
     }
 
-    // GET /negocios/{id} - perfil do negocio (dono nulo = nao reivindicado)
+    // GET /api/v1/negocios/{id} - perfil do negocio (dono nulo = nao reivindicado)
     @GetMapping("/{id}")
     public ResponseEntity<NegocioResponse> buscarPorId(@PathVariable Long id) {
         return null;
     }
 
-    // PUT /negocios/{id} - edita os dados cadastrais (somente o dono)
+    // PUT /api/v1/negocios/{id} - edita os dados cadastrais (somente o dono)
     @PutMapping("/{id}")
     public ResponseEntity<NegocioResponse> atualizar(
             @PathVariable Long id,
@@ -52,13 +52,13 @@ public class NegocioController {
         return null;
     }
 
-    // DELETE /negocios/{id} - desativa/exclui o negocio (somente o dono)
+    // DELETE /api/v1/negocios/{id} - desativa/exclui o negocio (somente o dono)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         return null;
     }
 
-    // POST /negocios/{id}/reivindicacoes - reivindica um perfil nao reivindicado
+    // POST /api/v1/negocios/{id}/reivindicacoes - reivindica um perfil nao reivindicado
     @PostMapping("/{id}/reivindicacoes")
     public ResponseEntity<ReivindicacaoResponse> reivindicar(
             @PathVariable Long id,

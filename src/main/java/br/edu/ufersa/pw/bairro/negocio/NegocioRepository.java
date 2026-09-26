@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 interface NegocioRepository extends JpaRepository<Negocio, Long> {
 
-    // GET /negocios - Feed e Busca, com bairro/categoria/q todos opcionais (null = sem filtro)
+    // GET /api/v1/negocios - Feed e Busca, com bairro/categoria/q todos opcionais (null = sem filtro)
     @Query("""
             SELECT n FROM Negocio n
             WHERE (:bairro IS NULL OR n.bairro = :bairro)
