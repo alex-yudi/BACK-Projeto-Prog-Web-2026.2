@@ -1,5 +1,6 @@
 package br.edu.ufersa.pw.bairro.negocio;
 
+import br.edu.ufersa.pw.bairro.negocio.dto.CategoriaNegocio;
 import br.edu.ufersa.pw.bairro.negocio.dto.NegocioCreate;
 import br.edu.ufersa.pw.bairro.negocio.dto.NegocioResponse;
 import br.edu.ufersa.pw.bairro.negocio.dto.NegocioUpdate;
@@ -16,32 +17,41 @@ import java.util.List;
 @RequestMapping("/api/v1/negocios")
 public class NegocioController {
 
-    // POST /api/v1/negocios - cadastra um novo negocio (dono = usuario autenticado)
+    private final NegocioApplicationService service;
+
+    NegocioController(NegocioApplicationService service) {
+        this.service = service;
+    }
+
+    // POST /api/v1/negocios - cadastra um novo negocio (usuario comum vira dono; ADMIN cria sem dono)
     @PostMapping
     public ResponseEntity<NegocioResponse> cadastrar(
             @AuthenticationPrincipal Usuario usuarioAutenticado,
             @RequestBody NegocioCreate request,
             UriComponentsBuilder uriBuilder
     ) {
-        return null;
+        NegocioResponse criado = service.cadastrar(usuarioAutenticado, request);
+        return ResponseEntity
+                .created(uriBuilder.path("/api/v1/negocios/{id}").buildAndExpand(criado.id()).toUri())
+                .body(criado);
     }
 
     // GET /api/v1/negocios - busca/listagem, cobre o Feed e a tela de Busca
     @GetMapping
     public ResponseEntity<List<NegocioResponse>> listar(
             @RequestParam(required = false) String bairro,
-            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) CategoriaNegocio categoria,
             @RequestParam(required = false) String q,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size
     ) {
-        return null;
+        return ResponseEntity.ok(service.listar(bairro, categoria, q, page, size));
     }
 
     // GET /api/v1/negocios/{id} - perfil do negocio (dono nulo = nao reivindicado)
     @GetMapping("/{id}")
     public ResponseEntity<NegocioResponse> buscarPorId(@PathVariable Long id) {
-        return null;
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
     // PUT /api/v1/negocios/{id} - edita os dados cadastrais (somente o dono ou ADMIN)
@@ -51,7 +61,7 @@ public class NegocioController {
             @PathVariable Long id,
             @RequestBody NegocioUpdate request
     ) {
-        return null;
+        return ResponseEntity.ok(service.atualizar(usuarioAutenticado, id, request));
     }
 
     // DELETE /api/v1/negocios/{id} - desativa/exclui o negocio (somente o dono ou ADMIN)
@@ -59,6 +69,7 @@ public class NegocioController {
     public ResponseEntity<Void> excluir(
             @AuthenticationPrincipal Usuario usuarioAutenticado,
             @PathVariable Long id) {
-        return null;
+        service.excluir(usuarioAutenticado, id);
+        return ResponseEntity.noContent().build();
     }
 }
