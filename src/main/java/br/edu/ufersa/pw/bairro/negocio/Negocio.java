@@ -12,11 +12,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
+// Soft delete (padrao da F2): repository.delete(...) vira UPDATE em excluido_em e toda consulta ignora
+// os excluidos. Como ha @Version, o UPDATE tambem confere e incrementa a versao.
 @Entity
 @Table(name = "negocios")
+@SQLDelete(sql = "UPDATE negocios SET excluido_em = CURRENT_TIMESTAMP, version = version + 1 WHERE id = ? AND version = ?")
+@SQLRestriction("excluido_em IS NULL")
 public class Negocio {
 
     @Id
@@ -46,6 +55,17 @@ public class Negocio {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dono_id")
     private Usuario dono;
+
+    // Lock otimista: duas alteracoes simultaneas do mesmo negocio (ex.: duas aprovacoes de reivindicacao)
+    // fazem a segunda falhar em vez de sobrescrever a primeira. O default cobre linhas ja existentes.
+    @Version
+    @ColumnDefault("0")
+    @Column(nullable = false)
+    private Long version;
+
+    // Preenchido so pelo @SQLDelete; nulo = registro ativo.
+    @Column(name = "excluido_em")
+    private LocalDateTime excluidoEm;
 
     protected Negocio() {
     }
