@@ -1,6 +1,6 @@
 package br.edu.ufersa.pw.bairro.shared.security;
 
-import br.edu.ufersa.pw.bairro.token.TokenService;
+import br.edu.ufersa.pw.bairro.auth.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

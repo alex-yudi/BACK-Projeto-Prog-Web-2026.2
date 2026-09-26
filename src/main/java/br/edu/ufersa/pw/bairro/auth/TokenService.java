@@ -1,4 +1,4 @@
-package br.edu.ufersa.pw.bairro.token;
+package br.edu.ufersa.pw.bairro.auth;
 
 import br.edu.ufersa.pw.bairro.usuario.Usuario;
 import com.auth0.jwt.JWT;
