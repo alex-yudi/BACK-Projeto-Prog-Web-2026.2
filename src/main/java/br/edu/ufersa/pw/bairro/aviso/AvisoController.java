@@ -49,14 +49,4 @@ public class AvisoController {
             @PathVariable Long avisoId) {
         return null;
     }
-
-    // PUT /api/v1/negocios/{negocioId}/avisos/{avisoId}/votos/me - avalia o aviso como util/nao-util (idempotente por usuario)
-    @PutMapping("/{avisoId}/votos/me")
-    public ResponseEntity<AvaliacaoResponse> votar(
-            @AuthenticationPrincipal Usuario usuarioAutenticado,
-            @PathVariable Long negocioId,
-            @PathVariable Long avisoId,
-            @RequestBody AvaliacaoRequest request) {
-        return null;
-    }
 }
