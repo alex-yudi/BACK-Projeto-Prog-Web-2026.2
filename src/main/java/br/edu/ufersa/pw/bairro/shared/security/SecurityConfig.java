@@ -30,6 +30,8 @@ public class SecurityConfig {
                 .sessionManagement(sm ->
                         sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
+                    // Verificacao de que a API esta no ar.
+                    req.requestMatchers(HttpMethod.GET, "/api/ping").permitAll();
                     // Visitantes: login, cadastro e leitura de feed, busca e perfil de negocio.
                     req.requestMatchers(HttpMethod.POST,
                             "/api/v1/auth/login",
