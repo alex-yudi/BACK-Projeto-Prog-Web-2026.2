@@ -1,7 +1,9 @@
 package br.edu.ufersa.pw.bairro.aviso;
 
 import br.edu.ufersa.pw.bairro.aviso.dto.*;
+import br.edu.ufersa.pw.bairro.usuario.Usuario;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,9 +12,12 @@ import java.util.List;
 @RequestMapping("/api/v1/negocios/{negocioId}/avisos")
 public class AvisoController {
 
-    // POST /api/v1/negocios/{negocioId}/avisos - posta um aviso sobre o negocio
+    // POST /api/v1/negocios/{negocioId}/avisos - posta um aviso sobre o negocio (autor = usuario autenticado)
     @PostMapping
-    public ResponseEntity<AvisoResponse> criar(@PathVariable Long negocioId, @RequestBody AvisoCreate request) {
+    public ResponseEntity<AvisoResponse> criar(
+            @AuthenticationPrincipal Usuario usuarioAutenticado,
+            @PathVariable Long negocioId,
+            @RequestBody AvisoCreate request) {
         return null;
     }
 
@@ -26,21 +31,32 @@ public class AvisoController {
         return null;
     }
 
-    // PUT /api/v1/negocios/{negocioId}/avisos/{avisoId} - edita o aviso (somente o autor)
+    // PUT /api/v1/negocios/{negocioId}/avisos/{avisoId} - edita o aviso (somente o autor ou ADMIN)
     @PutMapping("/{avisoId}")
-    public ResponseEntity<AvisoResponse> atualizar(@PathVariable Long negocioId, @PathVariable Long avisoId, @RequestBody AvisoUpdate request) {
+    public ResponseEntity<AvisoResponse> atualizar(
+            @AuthenticationPrincipal Usuario usuarioAutenticado,
+            @PathVariable Long negocioId,
+            @PathVariable Long avisoId,
+            @RequestBody AvisoUpdate request) {
         return null;
     }
 
-    // DELETE /api/v1/negocios/{negocioId}/avisos/{avisoId} - exclui o aviso (somente o autor)
+    // DELETE /api/v1/negocios/{negocioId}/avisos/{avisoId} - exclui o aviso (somente o autor ou ADMIN)
     @DeleteMapping("/{avisoId}")
-    public ResponseEntity<Void> excluir(@PathVariable Long negocioId, @PathVariable Long avisoId) {
+    public ResponseEntity<Void> excluir(
+            @AuthenticationPrincipal Usuario usuarioAutenticado,
+            @PathVariable Long negocioId,
+            @PathVariable Long avisoId) {
         return null;
     }
 
     // PUT /api/v1/negocios/{negocioId}/avisos/{avisoId}/votos/me - avalia o aviso como util/nao-util (idempotente por usuario)
     @PutMapping("/{avisoId}/votos/me")
-    public ResponseEntity<AvaliacaoResponse> votar(@PathVariable Long negocioId, @PathVariable Long avisoId, @RequestBody AvaliacaoRequest request) {
+    public ResponseEntity<AvaliacaoResponse> votar(
+            @AuthenticationPrincipal Usuario usuarioAutenticado,
+            @PathVariable Long negocioId,
+            @PathVariable Long avisoId,
+            @RequestBody AvaliacaoRequest request) {
         return null;
     }
 }

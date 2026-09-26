@@ -5,8 +5,10 @@ import br.edu.ufersa.pw.bairro.negocio.dto.NegocioResponse;
 import br.edu.ufersa.pw.bairro.negocio.dto.NegocioUpdate;
 import br.edu.ufersa.pw.bairro.negocio.dto.ReivindicacaoRequest;
 import br.edu.ufersa.pw.bairro.negocio.dto.ReivindicacaoResponse;
+import br.edu.ufersa.pw.bairro.usuario.Usuario;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -19,6 +21,7 @@ public class NegocioController {
     // POST /api/v1/negocios - cadastra um novo negocio (dono = usuario autenticado)
     @PostMapping
     public ResponseEntity<NegocioResponse> cadastrar(
+            @AuthenticationPrincipal Usuario usuarioAutenticado,
             @RequestBody NegocioCreate request,
             UriComponentsBuilder uriBuilder
     ) {
@@ -43,24 +46,28 @@ public class NegocioController {
         return null;
     }
 
-    // PUT /api/v1/negocios/{id} - edita os dados cadastrais (somente o dono)
+    // PUT /api/v1/negocios/{id} - edita os dados cadastrais (somente o dono ou ADMIN)
     @PutMapping("/{id}")
     public ResponseEntity<NegocioResponse> atualizar(
+            @AuthenticationPrincipal Usuario usuarioAutenticado,
             @PathVariable Long id,
             @RequestBody NegocioUpdate request
     ) {
         return null;
     }
 
-    // DELETE /api/v1/negocios/{id} - desativa/exclui o negocio (somente o dono)
+    // DELETE /api/v1/negocios/{id} - desativa/exclui o negocio (somente o dono ou ADMIN)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+    public ResponseEntity<Void> excluir(
+            @AuthenticationPrincipal Usuario usuarioAutenticado,
+            @PathVariable Long id) {
         return null;
     }
 
     // POST /api/v1/negocios/{id}/reivindicacoes - reivindica um perfil nao reivindicado
     @PostMapping("/{id}/reivindicacoes")
     public ResponseEntity<ReivindicacaoResponse> reivindicar(
+            @AuthenticationPrincipal Usuario usuarioAutenticado,
             @PathVariable Long id,
             @RequestBody ReivindicacaoRequest request
     ) {

@@ -9,6 +9,9 @@ public record UsuarioRegistroRequest(String nome, String email, String senha, St
         if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("O email é obrigatório!");
         }
+        if (!email.contains("@")) {
+            throw new IllegalArgumentException("O email informado não é válido!");
+        }
         if (senha == null || senha.isBlank()) {
             throw new IllegalArgumentException("A senha é obrigatória!");
         }
@@ -17,6 +20,9 @@ public record UsuarioRegistroRequest(String nome, String email, String senha, St
         }
         if (cep == null || cep.isBlank()) {
             throw new IllegalArgumentException("O CEP é obrigatório!");
+        }
+        if (!cep.matches("\\d{8}")) {
+            throw new IllegalArgumentException("O CEP deve conter exatamente 8 dígitos!");
         }
         if (numero == null || numero.isBlank()) {
             throw new IllegalArgumentException("O número é obrigatório!");
