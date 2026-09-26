@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -34,11 +35,16 @@ public class SecurityFilter extends OncePerRequestFilter {
         if(token != null){
             String subject = tokenService.validateToken(token);
             if(subject != null){
-                UserDetails user = userDetailsService.loadUserByUsername(subject);
-                var authentication = new UsernamePasswordAuthenticationToken(
-                        user, null, user.getAuthorities());
+                try {
+                    UserDetails user = userDetailsService.loadUserByUsername(subject);
+                    var authentication = new UsernamePasswordAuthenticationToken(
+                            user, null, user.getAuthorities());
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                } catch (UsernameNotFoundException e) {
+                    // Usuario excluido (ou com e-mail alterado) mas com token ainda valido:
+                    // segue sem autenticar, e as rotas protegidas respondem 401.
+                }
             }
 
         }
