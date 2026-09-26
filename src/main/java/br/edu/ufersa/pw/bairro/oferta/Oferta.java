@@ -17,7 +17,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-// Soft delete: repository.delete(...) vira UPDATE em excluido_em, e toda consulta ignora as linhas excluidas.
+// Soft delete (padrao da F2): repository.delete(...) vira UPDATE em excluido_em, e toda consulta ignora as
+// linhas excluidas.
 @Entity
 @Table(name = "ofertas")
 @SQLDelete(sql = "UPDATE ofertas SET excluido_em = CURRENT_TIMESTAMP WHERE id = ?")
@@ -51,62 +52,78 @@ public class Oferta {
     @Column(name = "excluido_em")
     private LocalDateTime excluidoEm;
 
-    public Oferta() {
+    protected Oferta() {
+    }
+
+    public Oferta(Negocio negocio, String nome, String descricao, BigDecimal preco, LocalDate validade) {
+        if (negocio == null) {
+            throw new IllegalArgumentException("O negócio é obrigatório!");
+        }
+        this.negocio = negocio;
+        this.nome = validarNome(nome);
+        this.descricao = validarDescricao(descricao);
+        this.preco = validarPreco(preco);
+        this.validade = validade;
+        this.criadoEm = LocalDateTime.now();
+    }
+
+    // PUT exige todos os campos deste recurso. O negocio da oferta nao muda.
+    public void atualizar(String nome, String descricao, BigDecimal preco, LocalDate validade) {
+        this.nome = validarNome(nome);
+        this.descricao = validarDescricao(descricao);
+        this.preco = validarPreco(preco);
+        this.validade = validade;
+    }
+
+    private static String validarNome(String nome) {
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("O nome é obrigatório!");
+        }
+        return nome;
+    }
+
+    private static String validarDescricao(String descricao) {
+        if (descricao == null || descricao.isBlank()) {
+            throw new IllegalArgumentException("A descrição é obrigatória!");
+        }
+        return descricao;
+    }
+
+    private static BigDecimal validarPreco(BigDecimal preco) {
+        if (preco == null) {
+            throw new IllegalArgumentException("O preço é obrigatório!");
+        }
+        if (preco.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("O preço não pode ser negativo!");
+        }
+        return preco;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Negocio getNegocio() {
         return negocio;
-    }
-
-    public void setNegocio(Negocio negocio) {
-        this.negocio = negocio;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public String getDescricao() {
         return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
     }
 
     public BigDecimal getPreco() {
         return preco;
     }
 
-    public void setPreco(BigDecimal preco) {
-        this.preco = preco;
-    }
-
     public LocalDate getValidade() {
         return validade;
     }
 
-    public void setValidade(LocalDate validade) {
-        this.validade = validade;
-    }
-
     public LocalDateTime getCriadoEm() {
         return criadoEm;
-    }
-
-    public void setCriadoEm(LocalDateTime criadoEm) {
-        this.criadoEm = criadoEm;
     }
 }
