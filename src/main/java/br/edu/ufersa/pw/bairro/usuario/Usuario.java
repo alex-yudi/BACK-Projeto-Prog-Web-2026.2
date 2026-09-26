@@ -1,5 +1,6 @@
 package br.edu.ufersa.pw.bairro.usuario;
 
+import br.edu.ufersa.pw.bairro.shared.exception.AcessoNegadoException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
@@ -127,6 +128,19 @@ public class Usuario implements UserDetails {
     }
 
     public UserRole getRole() {return role;}
+
+    public boolean isAdmin() {
+        return role == UserRole.ADMIN;
+    }
+
+    // Regra de moderacao: so o dono/autor (donoId) ou um ADMIN altera o recurso; os demais recebem 403.
+    // Recurso sem dono (donoId nulo) so pode ser alterado por ADMIN.
+    public void exigirDonoOuAdmin(Long donoId, String mensagem) {
+        boolean dono = donoId != null && donoId.equals(id);
+        if (!dono && !isAdmin()) {
+            throw new AcessoNegadoException(mensagem);
+        }
+    }
 
     @Override
     public boolean equals(Object o) {

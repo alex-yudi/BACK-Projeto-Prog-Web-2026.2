@@ -10,13 +10,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+// Soft delete: repository.delete(...) vira UPDATE em excluido_em, e toda consulta ignora as linhas excluidas.
 @Entity
 @Table(name = "ofertas")
+@SQLDelete(sql = "UPDATE ofertas SET excluido_em = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("excluido_em IS NULL")
 public class Oferta {
 
     @Id
@@ -41,6 +46,10 @@ public class Oferta {
 
     @Column(name = "criado_em", nullable = false)
     private LocalDateTime criadoEm;
+
+    // Preenchido so pelo @SQLDelete; nulo = registro ativo.
+    @Column(name = "excluido_em")
+    private LocalDateTime excluidoEm;
 
     public Oferta() {
     }
