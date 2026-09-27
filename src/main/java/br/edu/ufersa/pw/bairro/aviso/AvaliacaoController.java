@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/negocios/{negocioId}/avisos/{avisoId}/votos")
 public class AvaliacaoController {
 
+    private final AvaliacaoApplicationService service;
+
+    AvaliacaoController(AvaliacaoApplicationService service) {
+        this.service = service;
+    }
+
     // PUT /api/v1/negocios/{negocioId}/avisos/{avisoId}/votos/me - avalia o aviso como util/nao-util (idempotente por usuario)
     @PutMapping("/me")
     public ResponseEntity<AvaliacaoResponse> votar(
@@ -18,6 +24,6 @@ public class AvaliacaoController {
             @PathVariable Long negocioId,
             @PathVariable Long avisoId,
             @RequestBody AvaliacaoRequest request) {
-        return null;
+        return ResponseEntity.ok(service.votar(usuarioAutenticado, negocioId, avisoId, request));
     }
 }

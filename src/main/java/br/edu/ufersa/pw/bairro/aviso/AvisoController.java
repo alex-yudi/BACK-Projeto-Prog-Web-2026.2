@@ -5,6 +5,7 @@ import br.edu.ufersa.pw.bairro.usuario.Usuario;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -12,13 +13,24 @@ import java.util.List;
 @RequestMapping("/api/v1/negocios/{negocioId}/avisos")
 public class AvisoController {
 
+    private final AvisoApplicationService service;
+
+    AvisoController(AvisoApplicationService service) {
+        this.service = service;
+    }
+
     // POST /api/v1/negocios/{negocioId}/avisos - posta um aviso sobre o negocio (autor = usuario autenticado)
     @PostMapping
     public ResponseEntity<AvisoResponse> criar(
             @AuthenticationPrincipal Usuario usuarioAutenticado,
             @PathVariable Long negocioId,
-            @RequestBody AvisoCreate request) {
-        return null;
+            @RequestBody AvisoCreate request,
+            UriComponentsBuilder uriBuilder) {
+        AvisoResponse criado = service.criar(usuarioAutenticado, negocioId, request);
+        return ResponseEntity
+                .created(uriBuilder.path("/api/v1/negocios/{negocioId}/avisos/{avisoId}")
+                        .buildAndExpand(negocioId, criado.id()).toUri())
+                .body(criado);
     }
 
     // GET /api/v1/negocios/{negocioId}/avisos - lista os avisos do negocio (mural do perfil + dashboard do dono)
@@ -28,7 +40,7 @@ public class AvisoController {
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size
     ) {
-        return null;
+        return ResponseEntity.ok(service.listar(negocioId, page, size));
     }
 
     // PUT /api/v1/negocios/{negocioId}/avisos/{avisoId} - edita o aviso (somente o autor ou ADMIN)
@@ -38,7 +50,7 @@ public class AvisoController {
             @PathVariable Long negocioId,
             @PathVariable Long avisoId,
             @RequestBody AvisoUpdate request) {
-        return null;
+        return ResponseEntity.ok(service.atualizar(usuarioAutenticado, negocioId, avisoId, request));
     }
 
     // DELETE /api/v1/negocios/{negocioId}/avisos/{avisoId} - exclui o aviso (somente o autor ou ADMIN)
@@ -47,6 +59,7 @@ public class AvisoController {
             @AuthenticationPrincipal Usuario usuarioAutenticado,
             @PathVariable Long negocioId,
             @PathVariable Long avisoId) {
-        return null;
+        service.excluir(usuarioAutenticado, negocioId, avisoId);
+        return ResponseEntity.noContent().build();
     }
 }
