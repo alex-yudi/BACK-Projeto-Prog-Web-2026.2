@@ -1,31 +1,27 @@
 package br.edu.ufersa.pw.bairro.usuario.dto;
 
-public record UsuarioRegistroRequest(String nome, String email, String senha, String cep, String numero) {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-    public UsuarioRegistroRequest {
-        if (nome == null || nome.isBlank()) {
-            throw new IllegalArgumentException("O nome é obrigatório!");
-        }
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("O email é obrigatório!");
-        }
-        if (!email.contains("@")) {
-            throw new IllegalArgumentException("O email informado não é válido!");
-        }
-        if (senha == null || senha.isBlank()) {
-            throw new IllegalArgumentException("A senha é obrigatória!");
-        }
-        if (senha.length() < 8 || senha.length() > 32) {
-            throw new IllegalArgumentException("A senha deve ter entre 8 e 32 caracteres!");
-        }
-        if (cep == null || cep.isBlank()) {
-            throw new IllegalArgumentException("O CEP é obrigatório!");
-        }
-        if (!cep.matches("\\d{8}")) {
-            throw new IllegalArgumentException("O CEP deve conter exatamente 8 dígitos!");
-        }
-        if (numero == null || numero.isBlank()) {
-            throw new IllegalArgumentException("O número é obrigatório!");
-        }
-    }
+public record UsuarioRegistroRequest(
+        @NotBlank(message = "O nome é obrigatório!")
+        String nome,
+
+        @NotBlank(message = "O email é obrigatório!")
+        @Email(message = "O email informado não é válido!")
+        String email,
+
+        @NotBlank(message = "A senha é obrigatória!")
+        @Size(min = 8, max = 32, message = "A senha deve ter entre 8 e 32 caracteres!")
+        String senha,
+
+        @NotBlank(message = "O CEP é obrigatório!")
+        @Pattern(regexp = "\\d{8}", message = "O CEP deve conter exatamente 8 dígitos!")
+        String cep,
+
+        @NotBlank(message = "O número é obrigatório!")
+        String numero
+) {
 }
