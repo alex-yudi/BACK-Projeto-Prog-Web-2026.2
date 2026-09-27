@@ -19,7 +19,7 @@ public interface AvisoMapper {
                 entity.getId(),
                 entity.getNegocio().getId(),
                 entity.getAutor().getId(),
-                entity.getCategoria(),
+                br.edu.ufersa.pw.bairro.aviso.dto.CategoriaAviso.valueOf(entity.getCategoria().name()),
                 entity.getTexto(),
                 entity.getCriadoEm(),
                 votosUtil,
