@@ -3,6 +3,7 @@ package br.edu.ufersa.pw.bairro.auth;
 import br.edu.ufersa.pw.bairro.auth.dto.LoginRequest;
 import br.edu.ufersa.pw.bairro.auth.dto.TokenResponse;
 import br.edu.ufersa.pw.bairro.usuario.Usuario;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +26,7 @@ public class AuthController {
 
     // POST /api/v1/auth/login - autentica o usuario e devolve um token (REST e stateless, sem sessao no servidor)
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
         var authToken = new UsernamePasswordAuthenticationToken(request.email(), request.senha());
         var authentication = authenticationManager.authenticate(authToken);
         String token = tokenService.generateToken((Usuario) authentication.getPrincipal());

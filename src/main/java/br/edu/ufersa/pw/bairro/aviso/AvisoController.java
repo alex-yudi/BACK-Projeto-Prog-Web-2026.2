@@ -2,6 +2,7 @@ package br.edu.ufersa.pw.bairro.aviso;
 
 import br.edu.ufersa.pw.bairro.aviso.dto.*;
 import br.edu.ufersa.pw.bairro.usuario.Usuario;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class AvisoController {
     public ResponseEntity<AvisoResponse> criar(
             @AuthenticationPrincipal Usuario usuarioAutenticado,
             @PathVariable Long negocioId,
-            @RequestBody AvisoCreate request,
+            @Valid @RequestBody AvisoCreate request,
             UriComponentsBuilder uriBuilder) {
         AvisoResponse criado = service.criar(usuarioAutenticado, negocioId, request);
         return ResponseEntity
@@ -49,7 +50,7 @@ public class AvisoController {
             @AuthenticationPrincipal Usuario usuarioAutenticado,
             @PathVariable Long negocioId,
             @PathVariable Long avisoId,
-            @RequestBody AvisoUpdate request) {
+            @Valid @RequestBody AvisoUpdate request) {
         return ResponseEntity.ok(service.atualizar(usuarioAutenticado, negocioId, avisoId, request));
     }
 

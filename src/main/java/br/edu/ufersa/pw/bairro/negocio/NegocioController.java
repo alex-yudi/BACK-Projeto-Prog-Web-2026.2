@@ -6,6 +6,7 @@ import br.edu.ufersa.pw.bairro.negocio.dto.NegocioResponse;
 import br.edu.ufersa.pw.bairro.negocio.dto.NegocioUpdate;
 import br.edu.ufersa.pw.bairro.usuario.Usuario;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class NegocioController {
     @PostMapping
     public ResponseEntity<NegocioResponse> cadastrar(
             @AuthenticationPrincipal Usuario usuarioAutenticado,
-            @RequestBody NegocioCreate request,
+            @Valid @RequestBody NegocioCreate request,
             UriComponentsBuilder uriBuilder
     ) {
         NegocioResponse criado = service.cadastrar(usuarioAutenticado, request);
@@ -59,7 +60,7 @@ public class NegocioController {
     public ResponseEntity<NegocioResponse> atualizar(
             @AuthenticationPrincipal Usuario usuarioAutenticado,
             @PathVariable Long id,
-            @RequestBody NegocioUpdate request
+            @Valid @RequestBody NegocioUpdate request
     ) {
         return ResponseEntity.ok(service.atualizar(usuarioAutenticado, id, request));
     }

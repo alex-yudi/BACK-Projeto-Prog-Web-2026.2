@@ -4,6 +4,7 @@ import br.edu.ufersa.pw.bairro.oferta.dto.OfertaCreate;
 import br.edu.ufersa.pw.bairro.oferta.dto.OfertaResponse;
 import br.edu.ufersa.pw.bairro.oferta.dto.OfertaUpdate;
 import br.edu.ufersa.pw.bairro.usuario.Usuario;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class OfertaController {
     public ResponseEntity<OfertaResponse> criar(
             @AuthenticationPrincipal Usuario usuarioAutenticado,
             @PathVariable Long negocioId,
-            @RequestBody OfertaCreate request,
+            @Valid @RequestBody OfertaCreate request,
             UriComponentsBuilder uriBuilder) {
         OfertaResponse criada = service.criar(usuarioAutenticado, negocioId, request);
         return ResponseEntity
@@ -56,7 +57,7 @@ public class OfertaController {
             @AuthenticationPrincipal Usuario usuarioAutenticado,
             @PathVariable Long negocioId,
             @PathVariable Long ofertaId,
-            @RequestBody OfertaUpdate request) {
+            @Valid @RequestBody OfertaUpdate request) {
         return ResponseEntity.ok(service.atualizar(usuarioAutenticado, negocioId, ofertaId, request));
     }
 
