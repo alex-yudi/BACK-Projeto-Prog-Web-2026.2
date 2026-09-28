@@ -51,6 +51,13 @@ public class GlobalExceptionHandler {
         return problema(HttpStatus.BAD_REQUEST, "Violação de regra de negócio", ex.getMessage());
     }
 
+    // Estado do recurso incompatível com a operacao pedida (ex.: reivindicar negocio que ja tem dono).
+    // Usada pelos Domain Services quando a regra violada e de conflito, nao de validacao (HTTP 409).
+    @ExceptionHandler(IllegalStateException.class)
+    public ProblemDetail tratarEstadoInvalido(IllegalStateException ex) {
+        return problema(HttpStatus.CONFLICT, "Conflito", ex.getMessage());
+    }
+
     // Falha do Bean Validation (@Valid) nos DTOs de entrada anotados com @NotBlank/@Email/etc (HTTP 400).
     // Diferente do HttpMessageNotReadableException: aqui o JSON foi lido, mas um ou mais campos nao
     // passaram nas anotacoes. A resposta traz o campo e a mensagem de cada violacao.
