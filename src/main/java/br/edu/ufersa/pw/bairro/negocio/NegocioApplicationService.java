@@ -1,56 +1,104 @@
 package br.edu.ufersa.pw.bairro.negocio;
 
+import br.edu.ufersa.pw.bairro.negocio.dto.CategoriaNegocio;
+import br.edu.ufersa.pw.bairro.negocio.dto.NegocioCreate;
+import br.edu.ufersa.pw.bairro.negocio.dto.NegocioResponse;
+import br.edu.ufersa.pw.bairro.negocio.dto.NegocioUpdate;
 import br.edu.ufersa.pw.bairro.negocio.dto.ReivindicacaoRequest;
 import br.edu.ufersa.pw.bairro.negocio.dto.ReivindicacaoResponse;
+import br.edu.ufersa.pw.bairro.shared.Paginacao;
 import br.edu.ufersa.pw.bairro.shared.exception.EntidadeNaoEncontradaException;
 import br.edu.ufersa.pw.bairro.usuario.Usuario;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 class NegocioApplicationService {
 
     private final NegocioDomainService domainService;
-    private final NegocioRepository negocioRepository;
+    private final NegocioRepository repository;
     private final ReivindicacaoRepository reivindicacaoRepository;
+    private final NegocioMapper mapper;
+    private final ApplicationEventPublisher eventos;
 
-    NegocioApplicationService(NegocioDomainService domainService,
-                              NegocioRepository negocioRepository,
-                              ReivindicacaoRepository reivindicacaoRepository) {
+    NegocioApplicationService(NegocioDomainService domainService, NegocioRepository repository,
+                               ReivindicacaoRepository reivindicacaoRepository, NegocioMapper mapper,
+                               ApplicationEventPublisher eventos) {
         this.domainService = domainService;
-        this.negocioRepository = negocioRepository;
+        this.repository = repository;
         this.reivindicacaoRepository = reivindicacaoRepository;
+        this.mapper = mapper;
+        this.eventos = eventos;
+    }
+
+    // D4: usuario comum vira dono na hora; ADMIN cadastra sempre sem dono.
+    @Transactional
+    NegocioResponse cadastrar(Usuario autenticado, NegocioCreate dto) {
+        Negocio negocio = mapper.toEntity(dto);
+        if (!autenticado.isAdmin()) {
+            negocio.reivindicar(autenticado);
+        }
+        return mapper.toResponse(repository.save(negocio));
+    }
+
+    @Transactional(readOnly = true)
+    NegocioResponse buscarPorId(Long id) {
+        return mapper.toResponse(obter(id));
+    }
+
+    @Transactional(readOnly = true)
+    List<NegocioResponse> listar(String bairro, CategoriaNegocio categoria, String q, Integer page, Integer size) {
+        String termo = (q == null || q.isBlank()) ? null : q.trim();
+        String filtroBairro = (bairro == null || bairro.isBlank()) ? null : bairro.trim();
+        return mapper.toResponseList(
+                repository.buscar(filtroBairro, mapper.toDomain(categoria), termo, Paginacao.de(page, size)).getContent());
     }
 
     @Transactional
-    public ReivindicacaoResponse reivindicar(Usuario usuarioAutenticado, Long negocioId, ReivindicacaoRequest request) {
-        Negocio negocio = negocioRepository.findById(negocioId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Negócio não encontrado."));
+    NegocioResponse atualizar(Usuario autenticado, Long id, NegocioUpdate dto) {
+        Negocio negocio = obter(id);
+        exigirDonoOuAdmin(autenticado, negocio);
+        mapper.atualizarEntidade(dto, negocio);
+        return mapper.toResponse(negocio);
+    }
 
-        // Valida regras de negócio puras
+    @Transactional
+    void excluir(Usuario autenticado, Long id) {
+        Negocio negocio = obter(id);
+        exigirDonoOuAdmin(autenticado, negocio);
+        repository.delete(negocio);
+        eventos.publishEvent(new NegocioExcluidoEvent(id));
+    }
+
+    // Solicita a reivindicacao de um negocio sem dono (R3). So vira dono de fato quando um ADMIN aprovar (R5).
+    @Transactional
+    ReivindicacaoResponse reivindicar(Usuario autenticado, Long negocioId, ReivindicacaoRequest request) {
+        Negocio negocio = obter(negocioId);
         domainService.validarReivindicacao(negocio);
 
-        // Opcional: se quiser atualizar o dono direto no negócio usando o método da sua entidade:
-        // negocio.reivindicar(usuarioAutenticado);
-        // negocioRepository.save(negocio);
-
-        // Cria e salva a reivindicação de verdade no banco
         Reivindicacao reivindicacao = new Reivindicacao();
         reivindicacao.setNegocio(negocio);
-        reivindicacao.setUsuario(usuarioAutenticado);
+        reivindicacao.setUsuario(autenticado);
         reivindicacao.setJustificativa(request != null ? request.justificativa() : null);
         reivindicacao.setCriadoEm(LocalDateTime.now());
 
         Reivindicacao salva = reivindicacaoRepository.save(reivindicacao);
-
         return new ReivindicacaoResponse(
-                salva.getId(),
-                salva.getNegocio().getId(),
-                salva.getUsuario().getId(),
-                salva.getJustificativa(),
-                salva.getCriadoEm()
-        );
+                salva.getId(), salva.getNegocio().getId(), salva.getUsuario().getId(),
+                salva.getJustificativa(), salva.getCriadoEm());
+    }
+
+    private Negocio obter(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Negócio " + id + " não encontrado."));
+    }
+
+    private void exigirDonoOuAdmin(Usuario autenticado, Negocio negocio) {
+        Long donoId = negocio.getDono() == null ? null : negocio.getDono().getId();
+        autenticado.exigirDonoOuAdmin(donoId, "Somente o dono do negócio ou um ADMIN pode alterá-lo.");
     }
 }
