@@ -16,4 +16,7 @@ public interface ReivindicacaoMapper {
     ReivindicacaoResponse toResponse(Reivindicacao entity);
 
     List<ReivindicacaoResponse> toResponseList(List<Reivindicacao> entities);
+
+    // Enum do DTO -> enum de dominio, pelo nome. Usado no filtro da tela do ADMIN.
+    StatusReivindicacao toDomain(br.edu.ufersa.pw.bairro.negocio.dto.StatusReivindicacao dto);
 }

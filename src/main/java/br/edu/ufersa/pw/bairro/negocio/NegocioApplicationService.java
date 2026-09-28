@@ -115,6 +115,16 @@ class NegocioApplicationService {
         return reivindicacaoMapper.toResponse(reivindicacao);
     }
 
+    // Tela do ADMIN: lista as reivindicacoes, com filtro opcional por status (nulo = todas).
+    @Transactional(readOnly = true)
+    List<ReivindicacaoResponse> listarReivindicacoes(Usuario admin, br.edu.ufersa.pw.bairro.negocio.dto.StatusReivindicacao statusDto,
+            Integer page, Integer size) {
+        domainService.exigirAdmin(admin);
+        StatusReivindicacao status = statusDto == null ? null : reivindicacaoMapper.toDomain(statusDto);
+        return reivindicacaoMapper.toResponseList(
+                reivindicacaoRepository.buscar(status, Paginacao.de(page, size)).getContent());
+    }
+
     private Negocio obter(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Negócio " + id + " não encontrado."));

@@ -42,6 +42,8 @@ public class SecurityConfig {
                             "/api/v1/negocios/*/ofertas",
                             "/api/v1/negocios/*/ofertas/*",
                             "/api/v1/negocios/*/avisos").permitAll();
+                    // Tela do ADMIN para revisar e decidir reivindicacoes de negocio.
+                    req.requestMatchers("/api/v1/reivindicacoes", "/api/v1/reivindicacoes/**").hasRole("ADMIN");
                     // O container redireciona 400/404/405 para /error, e esse despacho passa de novo pelo
                     // Security sem o filtro JWT. Sem esta linha, todo erro desses vira 403 com corpo vazio.
                     req.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll();
