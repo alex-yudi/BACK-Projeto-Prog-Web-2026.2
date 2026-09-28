@@ -7,12 +7,16 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.net.URI;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 // AuthenticationException e AccessDeniedException do Spring Security nao passam por aqui de proposito:
 // quem responde por elas e o Spring Security.
@@ -45,6 +49,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NegocioException.class)
     public ProblemDetail tratarNegocioGenerico(NegocioException ex) {
         return problema(HttpStatus.BAD_REQUEST, "Violação de regra de negócio", ex.getMessage());
+    }
+
+    // Falha do Bean Validation (@Valid) nos DTOs de entrada anotados com @NotBlank/@Email/etc (HTTP 400).
+    // Diferente do HttpMessageNotReadableException: aqui o JSON foi lido, mas um ou mais campos nao
+    // passaram nas anotacoes. A resposta traz o campo e a mensagem de cada violacao.
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ProblemDetail tratarValidacao(MethodArgumentNotValidException ex) {
+        ProblemDetail problem = problema(HttpStatus.BAD_REQUEST, "Erro de validação de dados de entrada",
+                "Um ou mais campos estão inválidos. Corrija e tente novamente.");
+        Map<String, String> camposComErro = new HashMap<>();
+        for (FieldError fe : ex.getBindingResult().getFieldErrors()) {
+            camposComErro.put(fe.getField(), fe.getDefaultMessage());
+        }
+        problem.setProperty("erros", camposComErro);
+        return problem;
     }
 
     // JSON malformado ou reprovado pelo construtor do DTO (HTTP 400). Quando a validacao do DTO e a
