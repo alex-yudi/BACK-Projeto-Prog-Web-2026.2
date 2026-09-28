@@ -1,13 +1,18 @@
 package br.edu.ufersa.pw.bairro.aviso;
 
-import br.edu.ufersa.pw.bairro.usuario.Usuario;
 import br.edu.ufersa.pw.bairro.negocio.Negocio;
+import br.edu.ufersa.pw.bairro.usuario.Usuario;
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 
+// Soft delete: repository.delete(...) vira UPDATE em excluido_em, e toda consulta ignora as excluidas.
 @Entity
 @Table(name = "avisos")
+@SQLDelete(sql = "UPDATE avisos SET excluido_em = CURRENT_TIMESTAMP WHERE id = ?")
+@SQLRestriction("excluido_em IS NULL")
 public class Aviso {
 
     @Id
@@ -35,54 +40,71 @@ public class Aviso {
     // votosUtil/votosNaoUtil NAO sao colunas aqui - sao contados a partir das
     // Avaliacoes desse aviso (AvaliacaoRepository) na hora de montar o AvisoResponse.
 
-    public Aviso() {
+    // Preenchido so pelo @SQLDelete; nulo = registro ativo.
+    @Column(name = "excluido_em")
+    private LocalDateTime excluidoEm;
+
+    protected Aviso() {
+    }
+
+    public Aviso(Negocio negocio, Usuario autor, CategoriaAviso categoria, String texto) {
+        if (negocio == null) {
+            throw new IllegalArgumentException("O negócio é obrigatório!");
+        }
+        if (autor == null) {
+            throw new IllegalArgumentException("O autor é obrigatório!");
+        }
+        this.negocio = negocio;
+        this.autor = autor;
+        this.categoria = validarCategoria(categoria);
+        this.texto = validarTexto(texto);
+        this.criadoEm = LocalDateTime.now();
+    }
+
+    // PUT exige categoria e texto; o negocio e o autor nao mudam.
+    public void atualizar(CategoriaAviso categoria, String texto) {
+        this.categoria = validarCategoria(categoria);
+        this.texto = validarTexto(texto);
+    }
+
+    private static CategoriaAviso validarCategoria(CategoriaAviso categoria) {
+        if (categoria == null) {
+            throw new IllegalArgumentException("A categoria é obrigatória!");
+        }
+        return categoria;
+    }
+
+    private static String validarTexto(String texto) {
+        if (texto == null || texto.isBlank()) {
+            throw new IllegalArgumentException("O texto é obrigatório!");
+        }
+        if (texto.length() > 500) {
+            throw new IllegalArgumentException("O texto deve ter no máximo 500 caracteres.");
+        }
+        return texto;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Negocio getNegocio() {
         return negocio;
-    }
-
-    public void setNegocio(Negocio negocio) {
-        this.negocio = negocio;
     }
 
     public Usuario getAutor() {
         return autor;
     }
 
-    public void setAutor(Usuario autor) {
-        this.autor = autor;
-    }
-
     public CategoriaAviso getCategoria() {
         return categoria;
-    }
-
-    public void setCategoria(CategoriaAviso categoria) {
-        this.categoria = categoria;
     }
 
     public String getTexto() {
         return texto;
     }
 
-    public void setTexto(String texto) {
-        this.texto = texto;
-    }
-
     public LocalDateTime getCriadoEm() {
         return criadoEm;
-    }
-
-    public void setCriadoEm(LocalDateTime criadoEm) {
-        this.criadoEm = criadoEm;
     }
 }

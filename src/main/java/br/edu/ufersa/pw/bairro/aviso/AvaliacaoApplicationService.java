@@ -8,8 +8,6 @@ import br.edu.ufersa.pw.bairro.usuario.Usuario;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Service
 class AvaliacaoApplicationService {
 
@@ -35,16 +33,12 @@ class AvaliacaoApplicationService {
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Aviso " + avisoId + " não encontrado."));
 
         Avaliacao avaliacao = avaliacaoRepository.findByAvisoIdAndUsuarioId(avisoId, autenticado.getId())
-                .orElseGet(Avaliacao::new);
+                .map(existente -> {
+                    existente.atualizarVoto(dto.util());
+                    return existente;
+                })
+                .orElseGet(() -> avaliacaoRepository.save(new Avaliacao(aviso, autenticado, dto.util())));
 
-        if (avaliacao.getId() == null) {
-            avaliacao.setAviso(aviso);
-            avaliacao.setUsuario(autenticado);
-            avaliacao.setCriadoEm(LocalDateTime.now());
-        }
-        avaliacao.setUtil(dto.util());
-
-        Avaliacao salva = avaliacaoRepository.save(avaliacao);
-        return new AvaliacaoResponse(salva.getId(), avisoId, autenticado.getId(), salva.isUtil(), salva.getCriadoEm());
+        return new AvaliacaoResponse(avaliacao.getId(), avisoId, autenticado.getId(), avaliacao.isUtil(), avaliacao.getCriadoEm());
     }
 }
