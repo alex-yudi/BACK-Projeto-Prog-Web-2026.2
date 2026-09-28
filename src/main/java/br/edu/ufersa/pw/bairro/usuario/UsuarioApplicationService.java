@@ -5,6 +5,7 @@ import br.edu.ufersa.pw.bairro.aviso.dto.AvisoResponse;
 import br.edu.ufersa.pw.bairro.usuario.dto.UsuarioAtualizacaoRequest;
 import br.edu.ufersa.pw.bairro.usuario.dto.UsuarioRegistroRequest;
 import br.edu.ufersa.pw.bairro.usuario.dto.UsuarioResponse;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,15 +19,18 @@ class UsuarioApplicationService {
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final AvisoApi avisoApi; // Injeção da interface do outro módulo
+    private final ApplicationEventPublisher eventos;
 
     UsuarioApplicationService(UsuarioDomainService domainService,
                               UsuarioRepository repository,
                               PasswordEncoder passwordEncoder,
-                              AvisoApi avisoApi) {
+                              AvisoApi avisoApi,
+                              ApplicationEventPublisher eventos) {
         this.domainService = domainService;
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.avisoApi = avisoApi;
+        this.eventos = eventos;
     }
 
     @Transactional
@@ -69,9 +73,13 @@ class UsuarioApplicationService {
         return mapearParaResponse(salvo);
     }
 
+    // Soft delete (a entidade cuida do UPDATE e da anonimizacao do email). Publica o evento na mesma
+    // transacao: o modulo negocio escuta e deixa os negocios do usuario sem dono.
     @Transactional
     public void excluirPerfil(Usuario usuarioAutenticado) {
+        Long id = usuarioAutenticado.getId();
         repository.delete(usuarioAutenticado);
+        eventos.publishEvent(new UsuarioExcluidoEvent(id));
     }
 
     @Transactional(readOnly = true)

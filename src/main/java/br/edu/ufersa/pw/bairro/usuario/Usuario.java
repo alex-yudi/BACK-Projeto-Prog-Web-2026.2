@@ -3,16 +3,25 @@ package br.edu.ufersa.pw.bairro.usuario;
 import br.edu.ufersa.pw.bairro.shared.exception.AcessoNegadoException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+// Soft delete: exclui a conta (repository.delete) vira UPDATE em excluido_em, e a query fica invisivel
+// para qualquer consulta (login incluido - UserDetailsServiceImpl usa o mesmo repository). O email
+// original e anonimizado no mesmo UPDATE, porque a constraint UNIQUE da coluna e fisica e nao enxerga
+// o @SQLRestriction: sem isso, o e-mail excluido nunca poderia ser reaproveitado em um novo cadastro.
 @Entity
 @Table(name = "usuarios")
+@SQLDelete(sql = "UPDATE usuarios SET excluido_em = CURRENT_TIMESTAMP, email = CONCAT('excluido-', id, '@removido.invalid') WHERE id = ?")
+@SQLRestriction("excluido_em IS NULL")
 public class Usuario implements UserDetails {
 
     @Id
@@ -39,6 +48,10 @@ public class Usuario implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
+
+    // Preenchido so pelo @SQLDelete; nulo = conta ativa.
+    @Column(name = "excluido_em")
+    private LocalDateTime excluidoEm;
 
     protected Usuario() {
     }
