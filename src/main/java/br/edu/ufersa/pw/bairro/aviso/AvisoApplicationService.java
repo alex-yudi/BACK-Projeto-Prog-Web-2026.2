@@ -19,14 +19,17 @@ import java.util.List;
 @Service
 class AvisoApplicationService {
 
+    private final AvisoDomainService domainService;
     private final AvisoRepository avisoRepository;
     private final AvaliacaoRepository avaliacaoRepository;
     private final AvisoMapper mapper;
     private final NegocioApi negocioApi;
     private final EntityManager em;
 
-    AvisoApplicationService(AvisoRepository avisoRepository, AvaliacaoRepository avaliacaoRepository,
-                             AvisoMapper mapper, NegocioApi negocioApi, EntityManager em) {
+    AvisoApplicationService(AvisoDomainService domainService, AvisoRepository avisoRepository,
+                             AvaliacaoRepository avaliacaoRepository, AvisoMapper mapper, NegocioApi negocioApi,
+                             EntityManager em) {
+        this.domainService = domainService;
         this.avisoRepository = avisoRepository;
         this.avaliacaoRepository = avaliacaoRepository;
         this.mapper = mapper;
@@ -77,8 +80,7 @@ class AvisoApplicationService {
     }
 
     private void exigirAutorOuAdmin(Usuario autenticado, Aviso aviso) {
-        autenticado.exigirDonoOuAdmin(aviso.getAutor().getId(),
-                "Somente o autor do aviso ou um ADMIN pode alterá-lo.");
+        domainService.exigirAutorOuAdmin(autenticado, aviso);
     }
 
     // Pacote-privado de proposito: reaproveitado pelo AvisoApiImpl (GET /usuarios/me/avisos),

@@ -16,12 +16,15 @@ import java.util.List;
 @Service
 class OfertaApplicationService {
 
+    private final OfertaDomainService domainService;
     private final OfertaRepository repository;
     private final OfertaMapper mapper;
     private final NegocioApi negocioApi;
     private final EntityManager em;
 
-    OfertaApplicationService(OfertaRepository repository, OfertaMapper mapper, NegocioApi negocioApi, EntityManager em) {
+    OfertaApplicationService(OfertaDomainService domainService, OfertaRepository repository, OfertaMapper mapper,
+                              NegocioApi negocioApi, EntityManager em) {
+        this.domainService = domainService;
         this.repository = repository;
         this.mapper = mapper;
         this.negocioApi = negocioApi;
@@ -65,7 +68,7 @@ class OfertaApplicationService {
     // 404 se o negocio nao existe/foi excluido; 403 se o usuario nao e o dono (nem ADMIN).
     private void exigirDonoOuAdmin(Usuario autenticado, Long negocioId) {
         Long donoId = negocioApi.buscarPorId(negocioId).donoId();
-        autenticado.exigirDonoOuAdmin(donoId, "Somente o dono do negócio ou um ADMIN pode gerenciar as ofertas.");
+        domainService.exigirDonoOuAdmin(autenticado, donoId);
     }
 
     // Filtra pelo negocio do path: oferta de outro negocio tambem e 404.
