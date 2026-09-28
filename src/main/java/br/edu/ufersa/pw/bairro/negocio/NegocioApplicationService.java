@@ -22,15 +22,17 @@ class NegocioApplicationService {
     private final NegocioRepository repository;
     private final ReivindicacaoRepository reivindicacaoRepository;
     private final NegocioMapper mapper;
+    private final ReivindicacaoMapper reivindicacaoMapper;
     private final ApplicationEventPublisher eventos;
 
     NegocioApplicationService(NegocioDomainService domainService, NegocioRepository repository,
                                ReivindicacaoRepository reivindicacaoRepository, NegocioMapper mapper,
-                               ApplicationEventPublisher eventos) {
+                               ReivindicacaoMapper reivindicacaoMapper, ApplicationEventPublisher eventos) {
         this.domainService = domainService;
         this.repository = repository;
         this.reivindicacaoRepository = reivindicacaoRepository;
         this.mapper = mapper;
+        this.reivindicacaoMapper = reivindicacaoMapper;
         this.eventos = eventos;
     }
 
@@ -78,9 +80,7 @@ class NegocioApplicationService {
 
         String justificativa = request != null ? request.justificativa() : null;
         Reivindicacao salva = reivindicacaoRepository.save(new Reivindicacao(negocio, autenticado, justificativa));
-        return new ReivindicacaoResponse(
-                salva.getId(), salva.getNegocio().getId(), salva.getUsuario().getId(),
-                salva.getJustificativa(), salva.getCriadoEm());
+        return reivindicacaoMapper.toResponse(salva);
     }
 
     private Negocio obter(Long id) {
