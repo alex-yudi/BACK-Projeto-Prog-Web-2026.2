@@ -16,7 +16,7 @@ class OfertaNegocioListener {
         this.repository = repository;
     }
 
-    // As ofertas do negocio excluido saem de toda consulta (soft delete, padrao da F2).
+    // As ofertas do negocio excluido saem de toda consulta (soft delete).
     @EventListener
     void aoExcluirNegocio(NegocioExcluidoEvent evento) {
         repository.excluirPorNegocio(evento.negocioId(), LocalDateTime.now());

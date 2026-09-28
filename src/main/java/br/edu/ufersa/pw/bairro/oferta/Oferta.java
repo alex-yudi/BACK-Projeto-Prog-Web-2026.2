@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-// Soft delete (padrao da F2): repository.delete(...) vira UPDATE em excluido_em, e toda consulta ignora as
+// Soft delete: repository.delete(...) vira UPDATE em excluido_em, e toda consulta ignora as
 // linhas excluidas.
 @Entity
 @Table(name = "ofertas")

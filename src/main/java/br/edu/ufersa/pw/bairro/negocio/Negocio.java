@@ -20,7 +20,7 @@ import org.hibernate.annotations.SQLRestriction;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-// Soft delete (padrao da F2): repository.delete(...) vira UPDATE em excluido_em e toda consulta ignora
+// Soft delete: repository.delete(...) vira UPDATE em excluido_em e toda consulta ignora
 // os excluidos. Como ha @Version, o UPDATE tambem confere e incrementa a versao.
 @Entity
 @Table(name = "negocios")

@@ -31,7 +31,7 @@ public class Reivindicacao {
     @Column(name = "criado_em", nullable = false)
     private LocalDateTime criadoEm;
 
-    // Preenchidos so quando um ADMIN decide (R5); nulos enquanto PENDENTE.
+    // Preenchidos so quando um ADMIN decide; nulos enquanto PENDENTE.
     @Column(name = "decidida_em")
     private LocalDateTime decididaEm;
 
@@ -42,7 +42,7 @@ public class Reivindicacao {
     protected Reivindicacao() {
     }
 
-    // Nasce sempre PENDENTE (R3). A justificativa e opcional.
+    // Nasce sempre PENDENTE. A justificativa e opcional.
     public Reivindicacao(Negocio negocio, Usuario usuario, String justificativa) {
         if (negocio == null) {
             throw new IllegalArgumentException("O negócio é obrigatório!");
