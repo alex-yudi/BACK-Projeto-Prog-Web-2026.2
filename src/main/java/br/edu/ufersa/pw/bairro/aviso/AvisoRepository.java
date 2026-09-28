@@ -1,10 +1,12 @@
 package br.edu.ufersa.pw.bairro.aviso;
 
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 interface AvisoRepository extends JpaRepository<Aviso, Long> {
@@ -18,4 +20,14 @@ interface AvisoRepository extends JpaRepository<Aviso, Long> {
 
     // GET /api/v1/usuarios/me/avisos - tela "Meus avisos"
     Page<Aviso> findByAutorId(Long autorId, Pageable pageable);
+
+    // Bulk update: so atinge avisos ativos (@SQLRestriction). Sem clearAutomatically, para nao limpar o
+    // contexto de quem publicou o evento e perder alteracoes pendentes dele.
+    @Modifying
+    @Query("UPDATE Aviso a SET a.excluidoEm = :agora WHERE a.negocio.id = :negocioId")
+    void excluirPorNegocio(Long negocioId, LocalDateTime agora);
+
+    @Modifying
+    @Query("UPDATE Aviso a SET a.excluidoEm = :agora WHERE a.autor.id = :autorId")
+    void excluirPorAutor(Long autorId, LocalDateTime agora);
 }
