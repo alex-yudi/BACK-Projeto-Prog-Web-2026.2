@@ -35,13 +35,10 @@ class NegocioApplicationService {
         this.eventos = eventos;
     }
 
-    // D4: usuario comum vira dono na hora; ADMIN cadastra sempre sem dono.
     @Transactional
     NegocioResponse cadastrar(Usuario autenticado, NegocioCreate dto) {
         Negocio negocio = mapper.toEntity(dto);
-        if (!autenticado.isAdmin()) {
-            negocio.reivindicar(autenticado);
-        }
+        domainService.definirDonoNoCadastro(negocio, autenticado);
         return mapper.toResponse(repository.save(negocio));
     }
 
@@ -61,7 +58,7 @@ class NegocioApplicationService {
     @Transactional
     NegocioResponse atualizar(Usuario autenticado, Long id, NegocioUpdate dto) {
         Negocio negocio = obter(id);
-        exigirDonoOuAdmin(autenticado, negocio);
+        domainService.exigirDonoOuAdmin(autenticado, negocio);
         mapper.atualizarEntidade(dto, negocio);
         return mapper.toResponse(negocio);
     }
@@ -69,7 +66,7 @@ class NegocioApplicationService {
     @Transactional
     void excluir(Usuario autenticado, Long id) {
         Negocio negocio = obter(id);
-        exigirDonoOuAdmin(autenticado, negocio);
+        domainService.exigirDonoOuAdmin(autenticado, negocio);
         repository.delete(negocio);
         eventos.publishEvent(new NegocioExcluidoEvent(id));
     }
@@ -95,10 +92,5 @@ class NegocioApplicationService {
     private Negocio obter(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Negócio " + id + " não encontrado."));
-    }
-
-    private void exigirDonoOuAdmin(Usuario autenticado, Negocio negocio) {
-        Long donoId = negocio.getDono() == null ? null : negocio.getDono().getId();
-        autenticado.exigirDonoOuAdmin(donoId, "Somente o dono do negócio ou um ADMIN pode alterá-lo.");
     }
 }
