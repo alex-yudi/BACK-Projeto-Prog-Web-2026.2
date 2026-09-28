@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -77,13 +76,8 @@ class NegocioApplicationService {
         Negocio negocio = obter(negocioId);
         domainService.validarReivindicacao(negocio);
 
-        Reivindicacao reivindicacao = new Reivindicacao();
-        reivindicacao.setNegocio(negocio);
-        reivindicacao.setUsuario(autenticado);
-        reivindicacao.setJustificativa(request != null ? request.justificativa() : null);
-        reivindicacao.setCriadoEm(LocalDateTime.now());
-
-        Reivindicacao salva = reivindicacaoRepository.save(reivindicacao);
+        String justificativa = request != null ? request.justificativa() : null;
+        Reivindicacao salva = reivindicacaoRepository.save(new Reivindicacao(negocio, autenticado, justificativa));
         return new ReivindicacaoResponse(
                 salva.getId(), salva.getNegocio().getId(), salva.getUsuario().getId(),
                 salva.getJustificativa(), salva.getCriadoEm());
