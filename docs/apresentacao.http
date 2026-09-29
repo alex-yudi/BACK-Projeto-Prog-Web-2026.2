@@ -1,0 +1,297 @@
+### ============================================================
+### bairro. — roteiro de apresentação da API
+### ============================================================
+### Como usar:
+###   - VS Code: extensão "REST Client" (humao.rest-client), "Send Request"
+###     em cada bloco, na ordem em que aparecem.
+###   - Postman: Import > File. As referências
+###     {{nomeDaRequisicao.response.body.$.campo}} são exclusivas do REST
+###     Client — no Postman, copie o valor manualmente entre as chamadas.
+###
+### Ordem: 1) o que já existe (rode antes o docs/seed.sql) — 2) criando —
+### 3) modificando e excluindo. Cada erro aparece junto do caso parecido
+### que deu certo, não separado no fim.
+### ============================================================
+
+
+### ---------------- variáveis ----------------
+
+@prod = https://back-projeto-prog-web-2026-2.onrender.com
+@local = http://localhost:8080
+
+@host = {{prod}}
+# @host = {{local}}
+
+@baseUrl = {{host}}/api/v1
+@contentType = application/json
+@senha = Demo123!
+
+### Conta admin (criada pelo docs/seed.sql)
+@adminEmail = admin@bairro.com
+@adminSenha = Admin123!
+
+### Conta do usuário do seed (docs/seed.sql)
+@seedEmail = usuario.exemplo@bairro.com
+@seedSenha = Usuario123!
+
+### Ids gerados pelo docs/seed.sql — cole aqui depois de rodar o script
+@negocioSeedId = 1
+@ofertaSeedId = 1
+@reivindicacaoSeedId = 1
+
+
+### ============================================================
+### FASE 1 — O QUE JÁ EXISTE (dados do seed, tudo rota pública)
+### ============================================================
+
+### A API está no ar
+GET {{host}}/api/ping
+
+### Lista de negócios já cadastrados
+GET {{baseUrl}}/negocios
+
+### O negócio de exemplo, com suas ofertas e avisos
+GET {{baseUrl}}/negocios/{{negocioSeedId}}
+
+###
+
+GET {{baseUrl}}/negocios/{{negocioSeedId}}/ofertas
+
+###
+
+GET {{baseUrl}}/negocios/{{negocioSeedId}}/avisos
+
+### 404 — um negócio que não existe
+GET {{baseUrl}}/negocios/999999999
+
+### Login de Admin
+# @name loginAdmin
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "{{adminEmail}}",
+  "senha": "{{adminSenha}}"
+}
+
+### Login de usuário já existente
+# @name loginUsuarioSeed
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "{{seedEmail}}",
+  "senha": "{{seedSenha}}"
+}
+
+###
+
+## Verificar reinvidicações pendentes (só ADMIN pode ver)
+GET {{baseUrl}}/reivindicacoes?status=PENDENTE
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### Verificar reinvidicações pendentes - Tentativa por usuário comum
+GET {{baseUrl}}/reivindicacoes?status=PENDENTE
+Authorization: Bearer {{loginUsuarioSeed.response.body.$.token}}
+
+
+### ============================================================
+### FASE 2 — CRIANDO
+### ============================================================
+
+### 400 — cadastro com dado inválido
+POST {{baseUrl}}/usuarios
+Content-Type: {{contentType}}
+
+{
+  "nome": "",
+  "email": "nao-e-email",
+  "senha": "123",
+  "cep": "123",
+  "numero": ""
+}
+
+### Cadastro e login de um usuário novo
+# @name cadastroUsuario
+POST {{baseUrl}}/usuarios
+Content-Type: {{contentType}}
+
+{
+  "nome": "Usuário Novo",
+  "email": "usuario.novo@bairro.com",
+  "senha": "{{senha}}",
+  "cep": "59600000",
+  "numero": "1"
+}
+
+###
+
+# @name loginUsuario
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "{{cadastroUsuario.response.body.$.email}}",
+  "senha": "{{senha}}"
+}
+
+### Criar um negócio (quem cadastra já vira dono)
+# @name criarNegocio
+POST {{baseUrl}}/negocios
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUsuario.response.body.$.token}}
+
+{
+  "nome": "Negócio Novo",
+  "categoria": "PADARIA",
+  "cep": "59600000",
+  "numero": "300",
+  "bairro": "Bairro Exemplo",
+  "descricao": "Negócio criado durante a demonstração."
+}
+
+### 409 — reivindicar um negócio que já tem dono (o que acabou de ser criado)
+POST {{baseUrl}}/negocios/{{criarNegocio.response.body.$.id}}/reivindicacoes
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+{
+  "justificativa": "d"
+}
+
+### Criar uma oferta nesse negócio
+POST {{baseUrl}}/negocios/{{criarNegocio.response.body.$.id}}/ofertas
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUsuario.response.body.$.token}}
+
+{
+  "nome": "Oferta Nova",
+  "descricao": "Oferta criada durante a demonstração.",
+  "preco": 9.90
+}
+
+### Postar um aviso sobre o negócio de exemplo (do seed)
+# @name criarAviso
+POST {{baseUrl}}/negocios/{{negocioSeedId}}/avisos
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUsuario.response.body.$.token}}
+
+{
+  "categoria": "PRECO",
+  "texto": "Aviso criado durante a demonstração."
+}
+
+### Votar nesse aviso
+PUT {{baseUrl}}/negocios/{{negocioSeedId}}/avisos/{{criarAviso.response.body.$.id}}/votos/me
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUsuario.response.body.$.token}}
+
+{
+  "util": true
+}
+
+### Reivindicar o negócio sem dono do seed (ainda não decidido pelo ADMIN)
+POST {{baseUrl}}/negocios/{{negocioSeedId}}/reivindicacoes
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUsuario.response.body.$.token}}
+
+{
+  "justificativa": "Justificativa criada durante a demonstração."
+}
+
+
+### ============================================================
+### FASE 3 — MODIFICANDO E EXCLUINDO
+### ============================================================
+
+### 403 — sem token, numa rota autenticada
+GET {{baseUrl}}/usuarios/me
+
+### 403 — usuário comum tentando editar o negócio do seed (ainda sem dono aqui)
+PUT {{baseUrl}}/negocios/{{negocioSeedId}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginUsuario.response.body.$.token}}
+
+{
+  "nome": "Tentativa de invasão",
+  "categoria": "MERCADO",
+  "cep": "59600000",
+  "numero": "200",
+  "bairro": "Bairro Exemplo",
+  "descricao": "d"
+}
+
+### ADMIN aprova o pedido do seed — o solicitante vira dono, e o pedido
+### concorrente da fase 2 é rejeitado sozinho (D5)
+PATCH {{baseUrl}}/reivindicacoes/{{reivindicacaoSeedId}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+{
+  "status": "APROVADA"
+}
+
+### 409 — decidir de novo a mesma reivindicação
+PATCH {{baseUrl}}/reivindicacoes/{{reivindicacaoSeedId}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+{
+  "status": "REJEITADA"
+}
+
+### Confirma que o negócio do seed agora tem dono
+GET {{baseUrl}}/negocios/{{negocioSeedId}}
+
+### O usuário do seed edita seu próprio negócio
+# @name loginSeed
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "{{seedEmail}}",
+  "senha": "{{seedSenha}}"
+}
+
+###
+
+PUT {{baseUrl}}/negocios/{{negocioSeedId}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginSeed.response.body.$.token}}
+
+{
+  "nome": "Negócio Exemplo Editado",
+  "categoria": "MERCADO",
+  "cep": "59600000",
+  "numero": "200",
+  "bairro": "Bairro Exemplo",
+  "descricao": "Descrição editada durante a demonstração."
+}
+
+### Edita a oferta do seed
+PUT {{baseUrl}}/negocios/{{negocioSeedId}}/ofertas/{{ofertaSeedId}}
+Content-Type: {{contentType}}
+Authorization: Bearer {{loginSeed.response.body.$.token}}
+
+{
+  "nome": "Oferta Exemplo Editada",
+  "descricao": "Descrição editada durante a demonstração.",
+  "preco": 14.90
+}
+
+### Exclui a oferta do seed
+DELETE {{baseUrl}}/negocios/{{negocioSeedId}}/ofertas/{{ofertaSeedId}}
+Authorization: Bearer {{loginSeed.response.body.$.token}}
+
+### Exclui o negócio do seed — o aviso dele some junto (cascata)
+DELETE {{baseUrl}}/negocios/{{negocioSeedId}}
+Authorization: Bearer {{loginSeed.response.body.$.token}}
+
+###
+
+GET {{baseUrl}}/negocios/{{negocioSeedId}}/avisos
+
+### Exclui a própria conta (do usuário criado na fase 2) — cascata: o negócio
+### dela também fica sem dono
+DELETE {{baseUrl}}/usuarios/me
+Authorization: Bearer {{loginUsuario.response.body.$.token}}
