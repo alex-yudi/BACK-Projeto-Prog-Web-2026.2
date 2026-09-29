@@ -74,6 +74,11 @@ Content-Type: {{contentType}}
   "senha": "{{adminSenha}}"
 }
 
+### Verifica dados do próprio usuário (Admin)
+GET {{baseUrl}}/usuarios/me
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+
 ### Login de usuário já existente
 # @name loginUsuarioSeed
 POST {{baseUrl}}/auth/login
@@ -83,6 +88,11 @@ Content-Type: {{contentType}}
   "email": "{{seedEmail}}",
   "senha": "{{seedSenha}}"
 }
+
+### Verifica dados do próprio usuário (usuário comum)
+GET {{baseUrl}}/usuarios/me
+Authorization: Bearer {{loginUsuarioSeed.response.body.$.token}}
+
 
 ###
 
@@ -134,6 +144,11 @@ Content-Type: {{contentType}}
   "email": "{{cadastroUsuario.response.body.$.email}}",
   "senha": "{{senha}}"
 }
+
+### Verifica dados do próprio usuário (usuário comum)
+GET {{baseUrl}}/usuarios/me
+Authorization: Bearer {{loginUsuario.response.body.$.token}}
+
 
 ### Criar um negócio (quem cadastra já vira dono)
 # @name criarNegocio
