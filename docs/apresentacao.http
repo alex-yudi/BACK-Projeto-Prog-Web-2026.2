@@ -210,7 +210,7 @@ GET {{baseUrl}}/usuarios/me
 ### 403 — usuário comum tentando editar o negócio do seed (ainda sem dono aqui)
 PUT {{baseUrl}}/negocios/{{negocioSeedId}}
 Content-Type: {{contentType}}
-Authorization: Bearer {{loginUsuario.response.body.$.token}}
+Authorization: Bearer {{loginUsuarioSeed.response.body.$.token}}
 
 {
   "nome": "Tentativa de invasão",
